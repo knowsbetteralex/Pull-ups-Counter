@@ -38,7 +38,7 @@ public final class PoseEngine implements AutoCloseable {
                 .setMinTrackingConfidence(0.50f)
                 .setResultListener((result, input) -> {
                     long inferenceMs = SystemClock.uptimeMillis() - result.timestampMs();
-                    listener.onPose(result, input.width(), input.height(), inferenceMs);
+                    listener.onPose(result, input.getWidth(), input.getHeight(), inferenceMs);
                 })
                 .setErrorListener(error -> {
                     Log.e(TAG, "MediaPipe error", error);
