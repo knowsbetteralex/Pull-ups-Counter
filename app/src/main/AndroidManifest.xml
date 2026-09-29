@@ -7,7 +7,7 @@
         android:allowBackup="true"
         android:label="Pull-Up Counter"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@android:style/Theme.Material.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:exported="true"
