@@ -1,0 +1,17 @@
+def poseModel = file("src/main/assets/pose_landmarker_lite.task")
+def poseModelUrl = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"
+
+tasks.register("downloadPoseModel") {
+    outputs.file(poseModel)
+    doLast {
+        if (!poseModel.exists()) {
+            poseModel.parentFile.mkdirs()
+            println "Downloading MediaPipe Pose Landmarker Lite model..."
+            new URL(poseModelUrl).withInputStream { input ->
+                poseModel.withOutputStream { output -> output << input }
+            }
+        }
+    }
+}
+
+tasks.named("preBuild").configure { dependsOn("downloadPoseModel") }
