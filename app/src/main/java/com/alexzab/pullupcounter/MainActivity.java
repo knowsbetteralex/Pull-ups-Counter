@@ -5,13 +5,14 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.mediapipe.tasks.components.containers.NormalizedLandmark;
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult;
 
+import java.util.List;
 import java.util.Locale;
 
 public final class MainActivity extends Activity implements PoseEngine.Listener, Camera2Controller.Listener {
@@ -25,6 +26,11 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private PoseEngine poseEngine;
     private Camera2Controller cameraController;
     private final PullupDetector detector = new PullupDetector();
+    private final AutoBarDetector autoBarDetector = new AutoBarDetector();
+
+    private volatile Bitmap latestFrame;
+    private volatile boolean autoCalibrating = true;
+    private volatile boolean manualSelectionMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,33 +42,38 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         countText = findViewById(R.id.count_text);
         stateText = findViewById(R.id.state_text);
         debugText = findViewById(R.id.debug_text);
-        Button reset = findViewById(R.id.reset_button);
-        Button calibrate = findViewById(R.id.calibrate_button);
+        TextView reset = findViewById(R.id.reset_button);
+        TextView manual = findViewById(R.id.calibrate_button);
+        TextView auto = findViewById(R.id.auto_button);
 
         overlayView.setBarSelectionListener(normalizedY -> {
+            manualSelectionMode = false;
+            autoCalibrating = false;
+            autoBarDetector.reset();
             detector.setCalibratedBarY(normalizedY);
-            stateText.setText("РАСПРЯМИ РУКИ");
+            overlayView.setBarYNormalized(normalizedY, false);
+            stateText.setText("ПЕРЕКЛАДИНА ЗАДАНА ✓");
             debugText.setText(String.format(Locale.US,
-                    "Перекладина: y = %.3f", normalizedY));
+                    "Ручная линия: y = %.3f • можно начинать", normalizedY));
         });
 
         reset.setOnClickListener(v -> {
             detector.reset();
             countText.setText("0");
-            stateText.setText(detector.isCalibrated() ? "ПОИСК НИЖНЕЙ ТОЧКИ" : "УКАЖИТЕ ПЕРЕКЛАДИНУ");
+            if (detector.isCalibrated()) {
+                stateText.setText("ГОТОВ К ПОДТЯГИВАНИЯМ");
+                debugText.setText("Счётчик сброшен, положение перекладины сохранено");
+            } else if (manualSelectionMode) {
+                stateText.setText("РУЧНАЯ КОРРЕКТИРОВКА");
+            } else {
+                stateText.setText("АВТОПОИСК ПЕРЕКЛАДИНЫ");
+            }
         });
 
-        calibrate.setOnClickListener(v -> {
-            detector.clearCalibration();
-            overlayView.setBarYNormalized(null);
-            overlayView.beginBarSelection();
-            stateText.setText("УКАЖИТЕ ПЕРЕКЛАДИНУ");
-            debugText.setText("Коснитесь пальцем линии перекладины на изображении");
-        });
+        manual.setOnClickListener(v -> startManualCalibration());
+        auto.setOnClickListener(v -> startAutoCalibration());
 
-        overlayView.beginBarSelection();
-        stateText.setText("УКАЖИТЕ ПЕРЕКЛАДИНУ");
-        debugText.setText("Коснитесь пальцем линии перекладины на изображении");
+        startAutoCalibration();
 
         try {
             poseEngine = new PoseEngine(this, this);
@@ -78,33 +89,100 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         }
     }
 
+    private void startAutoCalibration() {
+        autoCalibrating = true;
+        manualSelectionMode = false;
+        autoBarDetector.reset();
+        detector.clearCalibration();
+        if (overlayView != null) overlayView.beginAutoBarSearch();
+        if (stateText != null) stateText.setText("АВТОПОИСК ПЕРЕКЛАДИНЫ");
+        if (debugText != null) {
+            debugText.setText("Возьмитесь за перекладину и спокойно повисните на прямых руках");
+        }
+    }
+
+    private void startManualCalibration() {
+        autoCalibrating = false;
+        manualSelectionMode = true;
+        autoBarDetector.reset();
+        detector.clearCalibration();
+        overlayView.setBarYNormalized(null, false);
+        overlayView.beginBarSelection();
+        stateText.setText("РУЧНАЯ КОРРЕКТИРОВКА");
+        debugText.setText("Коснитесь перекладины на изображении; линию можно подвинуть пальцем");
+    }
+
     private void startCamera() {
         if (cameraController != null) return;
-        if (!detector.isCalibrated()) stateText.setText("УКАЖИТЕ ПЕРЕКЛАДИНУ");
         cameraController = new Camera2Controller(this, this);
         cameraController.start();
     }
 
     @Override
     public void onFrame(Bitmap bitmap) {
+        latestFrame = bitmap;
         runOnUiThread(() -> cameraView.setImageBitmap(bitmap));
         if (poseEngine != null) poseEngine.detect(bitmap);
     }
 
     @Override
     public void onPose(PoseLandmarkerResult result, int inputWidth, int inputHeight, long inferenceMs) {
+        List<NormalizedLandmark> points = result.landmarks().isEmpty()
+                ? null : result.landmarks().get(0);
+
+        AutoBarDetector.Observation observation = null;
+        boolean justAutoCalibrated = false;
+
+        if (autoCalibrating && !manualSelectionMode && !detector.isCalibrated() && points != null) {
+            observation = autoBarDetector.observe(latestFrame, points);
+            if (observation.ready) {
+                detector.setCalibratedBarY(observation.normalizedY);
+                autoCalibrating = false;
+                justAutoCalibrated = true;
+            }
+        }
+
+        final AutoBarDetector.Observation autoObservation = observation;
+        final boolean autoReadyNow = justAutoCalibrated;
+
         runOnUiThread(() -> {
             overlayView.setResult(result, inputWidth, inputHeight);
 
+            if (autoReadyNow && autoObservation != null) {
+                overlayView.setBarYNormalized(autoObservation.normalizedY, true);
+                stateText.setText("ПЕРЕКЛАДИНА НАЙДЕНА ✓");
+                debugText.setText(String.format(Locale.US,
+                        "Авто y = %.3f • уверенность %.0f%% • если неточно — нажмите «Линия»",
+                        autoObservation.normalizedY, autoObservation.confidence * 100f));
+                return;
+            }
+
             if (!detector.isCalibrated()) {
-                stateText.setText("УКАЖИТЕ ПЕРЕКЛАДИНУ");
-                debugText.setText("Коснитесь пальцем линии перекладины на изображении");
+                if (manualSelectionMode) {
+                    stateText.setText("РУЧНАЯ КОРРЕКТИРОВКА");
+                    debugText.setText("Коснитесь перекладины на изображении");
+                    return;
+                }
+
+                stateText.setText("АВТОПОИСК ПЕРЕКЛАДИНЫ");
+                if (result.landmarks().isEmpty()) {
+                    debugText.setText("Встаньте в кадр и возьмитесь за перекладину");
+                } else if (autoObservation == null || !autoObservation.candidateFound) {
+                    debugText.setText("Повисните на прямых руках — кисти должны быть хорошо видны");
+                } else {
+                    debugText.setText(String.format(Locale.US,
+                            "Стабилизация %d/%d • %s • уверенность %.0f%%",
+                            Math.min(autoObservation.stableSamples, autoBarDetector.getRequiredSamples()),
+                            autoBarDetector.getRequiredSamples(),
+                            autoObservation.edgeRefined ? "контур найден" : "по положению кистей",
+                            autoObservation.confidence * 100f));
+                }
                 return;
             }
 
             if (result.landmarks().isEmpty()) {
                 stateText.setText("ЧЕЛОВЕК НЕ НАЙДЕН");
-                debugText.setText("Встань полностью в кадр");
+                debugText.setText("Встаньте полностью в кадр");
                 return;
             }
 
@@ -113,24 +191,24 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             stateText.setText(stateName(r));
 
             if (!r.poseReliable) {
-                debugText.setText("Плечи / локти / кисти видны недостаточно хорошо");
+                debugText.setText("Плечи, локти или кисти видны недостаточно хорошо");
             } else {
                 debugText.setText(String.format(Locale.US,
-                        "L %.0f°   R %.0f°   mouthY %.3f   barY %.3f   %d ms",
-                        r.leftAngle, r.rightAngle, r.mouthY, r.barY, inferenceMs));
+                        "Локти %.0f° / %.0f°   •   линия %.3f   •   %d ms",
+                        r.leftAngle, r.rightAngle, r.barY, inferenceMs));
             }
         });
     }
 
     private static String stateName(PullupDetector.Result r) {
-        if (!r.calibrated) return "УКАЖИТЕ ПЕРЕКЛАДИНУ";
+        if (!r.calibrated) return "КАЛИБРОВКА";
         if (!r.poseReliable) return "ПОЗА НЕУВЕРЕННАЯ";
         switch (r.state) {
             case DOWN: return "ВНИЗУ — ГОТОВ";
             case GOING_UP: return "ВВЕРХ ↑";
             case UP: return r.countedNow ? "ЗАСЧИТАНО ✓" : "ВВЕРХУ";
             case GOING_DOWN: return "ВНИЗ ↓";
-            default: return "РАСПРЯМИ РУКИ";
+            default: return "РАСПРЯМИТЕ РУКИ";
         }
     }
 
