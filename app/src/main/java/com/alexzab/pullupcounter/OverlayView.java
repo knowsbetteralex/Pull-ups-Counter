@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +20,8 @@ public final class OverlayView extends View {
     private final Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint barPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint barLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint barLabelBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint guidePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint guideTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -26,30 +29,38 @@ public final class OverlayView extends View {
     private int inputWidth = 1;
     private int inputHeight = 1;
     private Float barYNormalized = null;
-    private boolean selectingBar = true;
+    private boolean selectingBar = false;
+    private boolean autoSearching = true;
+    private boolean barAutomatic = false;
     private BarSelectionListener barSelectionListener;
 
     public OverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setClickable(true);
 
-        linePaint.setColor(Color.rgb(0, 255, 170));
-        linePaint.setStrokeWidth(6f);
+        linePaint.setColor(Color.rgb(55, 230, 180));
+        linePaint.setStrokeWidth(5f);
         linePaint.setStyle(Paint.Style.STROKE);
 
-        pointPaint.setColor(Color.YELLOW);
-        pointPaint.setStrokeWidth(10f);
+        pointPaint.setColor(Color.WHITE);
+        pointPaint.setStrokeWidth(8f);
         pointPaint.setStyle(Paint.Style.FILL);
 
-        barPaint.setColor(Color.rgb(255, 80, 80));
         barPaint.setStrokeWidth(7f);
         barPaint.setStyle(Paint.Style.STROKE);
 
-        guidePaint.setColor(Color.argb(150, 0, 0, 0));
+        barLabelPaint.setTextSize(30f);
+        barLabelPaint.setFakeBoldText(true);
+        barLabelPaint.setTextAlign(Paint.Align.CENTER);
+
+        barLabelBgPaint.setColor(Color.argb(205, 12, 18, 24));
+        barLabelBgPaint.setStyle(Paint.Style.FILL);
+
+        guidePaint.setColor(Color.argb(176, 10, 15, 20));
         guidePaint.setStyle(Paint.Style.FILL);
 
         guideTextPaint.setColor(Color.WHITE);
-        guideTextPaint.setTextSize(42f);
+        guideTextPaint.setTextSize(36f);
         guideTextPaint.setTextAlign(Paint.Align.CENTER);
         guideTextPaint.setFakeBoldText(true);
     }
@@ -60,12 +71,26 @@ public final class OverlayView extends View {
 
     public void beginBarSelection() {
         selectingBar = true;
+        autoSearching = false;
+        barAutomatic = false;
         postInvalidateOnAnimation();
     }
 
-    public void setBarYNormalized(Float normalizedY) {
+    public void beginAutoBarSearch() {
+        selectingBar = false;
+        autoSearching = true;
+        barAutomatic = true;
+        barYNormalized = null;
+        postInvalidateOnAnimation();
+    }
+
+    public void setBarYNormalized(Float normalizedY, boolean automatic) {
         this.barYNormalized = normalizedY;
-        if (normalizedY != null) selectingBar = false;
+        this.barAutomatic = automatic;
+        if (normalizedY != null) {
+            selectingBar = false;
+            autoSearching = false;
+        }
         postInvalidateOnAnimation();
     }
 
@@ -78,15 +103,22 @@ public final class OverlayView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!selectingBar) return super.onTouchEvent(event);
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+        if (!selectingBar) return false;
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN
+                || event.getAction() == MotionEvent.ACTION_MOVE
+                || event.getAction() == MotionEvent.ACTION_UP) {
             float normalizedY = viewYToImageNormalizedY(event.getY());
             if (normalizedY >= 0f && normalizedY <= 1f) {
                 barYNormalized = normalizedY;
-                selectingBar = false;
-                if (barSelectionListener != null) barSelectionListener.onBarSelected(normalizedY);
-                performClick();
+                barAutomatic = false;
                 invalidate();
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    selectingBar = false;
+                    if (barSelectionListener != null) barSelectionListener.onBarSelected(normalizedY);
+                    performClick();
+                }
             }
             return true;
         }
@@ -139,16 +171,38 @@ public final class OverlayView extends View {
 
         if (barYNormalized != null) {
             float y = imageYToViewY(barYNormalized);
+            int color = barAutomatic ? Color.rgb(55, 230, 180) : Color.rgb(255, 200, 87);
+            barPaint.setColor(color);
+            barLabelPaint.setColor(color);
             canvas.drawLine(0f, y, getWidth(), y, barPaint);
+
+            String label = barAutomatic ? "AUTO" : "MANUAL";
+            float labelX = getWidth() - 58f;
+            float labelY = Math.max(36f, y - 16f);
+            RectF bg = new RectF(labelX - 48f, labelY - 30f, labelX + 48f, labelY + 10f);
+            canvas.drawRoundRect(bg, 18f, 18f, barLabelBgPaint);
+            canvas.drawText(label, labelX, labelY, barLabelPaint);
         }
 
         if (selectingBar) {
-            float boxTop = getHeight() * 0.42f;
-            float boxBottom = getHeight() * 0.58f;
+            float boxTop = getHeight() * 0.43f;
+            float boxBottom = getHeight() * 0.57f;
             canvas.drawRect(0f, boxTop, getWidth(), boxBottom, guidePaint);
             float baseline = (boxTop + boxBottom) * 0.5f
                     - (guideTextPaint.ascent() + guideTextPaint.descent()) * 0.5f;
-            canvas.drawText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ", getWidth() * 0.5f, baseline, guideTextPaint);
+            canvas.drawText("ПРОВЕДИТЕ ЛИНИЮ ПО ПЕРЕКЛАДИНЕ", getWidth() * 0.5f,
+                    baseline, guideTextPaint);
+        } else if (autoSearching) {
+            float boxTop = getHeight() * 0.78f;
+            float boxBottom = getHeight() * 0.86f;
+            canvas.drawRoundRect(new RectF(28f, boxTop, getWidth() - 28f, boxBottom),
+                    28f, 28f, guidePaint);
+            float baseline = (boxTop + boxBottom) * 0.5f
+                    - (guideTextPaint.ascent() + guideTextPaint.descent()) * 0.5f;
+            guideTextPaint.setTextSize(30f);
+            canvas.drawText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ",
+                    getWidth() * 0.5f, baseline, guideTextPaint);
+            guideTextPaint.setTextSize(36f);
         }
     }
 }
