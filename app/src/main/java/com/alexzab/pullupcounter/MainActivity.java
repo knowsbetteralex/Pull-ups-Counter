@@ -2,6 +2,7 @@ package com.alexzab.pullupcounter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -21,10 +22,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private ImageView cameraView;
     private OverlayView overlayView;
     private TextView countText;
+    private TextView todayTotalText;
     private TextView stateText;
     private TextView debugText;
     private PoseEngine poseEngine;
     private Camera2Controller cameraController;
+    private StatsStore statsStore;
     private final PullupDetector detector = new PullupDetector();
     private final AutoBarDetector autoBarDetector = new AutoBarDetector();
 
@@ -32,19 +35,30 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private volatile boolean autoCalibrating = true;
     private volatile boolean manualSelectionMode = false;
 
+    private long activeAttemptId = -1L;
+    private long activeDayStart;
+    private int currentAttemptReps = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        statsStore = new StatsStore(this);
+        activeDayStart = StatsStore.startOfDay(System.currentTimeMillis());
+
         cameraView = findViewById(R.id.camera_view);
         overlayView = findViewById(R.id.overlay_view);
         countText = findViewById(R.id.count_text);
+        todayTotalText = findViewById(R.id.today_total_text);
         stateText = findViewById(R.id.state_text);
         debugText = findViewById(R.id.debug_text);
         TextView reset = findViewById(R.id.reset_button);
         TextView manual = findViewById(R.id.calibrate_button);
         TextView auto = findViewById(R.id.auto_button);
+
+        findViewById(R.id.today_total_container).setOnClickListener(v ->
+                startActivity(new Intent(this, HistoryActivity.class)));
 
         overlayView.setBarSelectionListener(normalizedY -> {
             manualSelectionMode = false;
@@ -59,10 +73,14 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         reset.setOnClickListener(v -> {
             detector.reset();
+            activeAttemptId = -1L;
+            currentAttemptReps = 0;
+            activeDayStart = StatsStore.startOfDay(System.currentTimeMillis());
             countText.setText("0");
+            refreshTodayTotal();
             if (detector.isCalibrated()) {
                 stateText.setText("ГОТОВ К ПОДТЯГИВАНИЯМ");
-                debugText.setText("Счётчик сброшен, положение перекладины сохранено");
+                debugText.setText("Новая попытка • положение перекладины сохранено");
             } else if (manualSelectionMode) {
                 stateText.setText("РУЧНАЯ КОРРЕКТИРОВКА");
             } else {
@@ -73,6 +91,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         manual.setOnClickListener(v -> startManualCalibration());
         auto.setOnClickListener(v -> startAutoCalibration());
 
+        refreshTodayTotal();
         startAutoCalibration();
 
         try {
@@ -146,6 +165,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         final boolean autoReadyNow = justAutoCalibrated;
 
         runOnUiThread(() -> {
+            ensureDayBoundary();
             overlayView.setResult(result, inputWidth, inputHeight);
 
             if (autoReadyNow && autoObservation != null) {
@@ -190,6 +210,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             countText.setText(Integer.toString(r.count));
             stateText.setText(stateName(r));
 
+            if (r.countedNow) {
+                currentAttemptReps = r.count;
+                activeAttemptId = statsStore.saveAttemptProgress(activeAttemptId, currentAttemptReps);
+                refreshTodayTotal();
+            }
+
             if (!r.poseReliable) {
                 debugText.setText("Плечи, локти или кисти видны недостаточно хорошо");
             } else {
@@ -198,6 +224,24 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                         r.leftAngle, r.rightAngle, r.barY, inferenceMs));
             }
         });
+    }
+
+    private void ensureDayBoundary() {
+        long todayStart = StatsStore.startOfDay(System.currentTimeMillis());
+        if (todayStart == activeDayStart) return;
+
+        activeDayStart = todayStart;
+        activeAttemptId = -1L;
+        currentAttemptReps = 0;
+        detector.reset();
+        countText.setText("0");
+        refreshTodayTotal();
+    }
+
+    private void refreshTodayTotal() {
+        if (todayTotalText != null && statsStore != null) {
+            todayTotalText.setText(Integer.toString(statsStore.getTodayTotal()));
+        }
     }
 
     private static String stateName(PullupDetector.Result r) {
@@ -237,6 +281,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     @Override
     protected void onResume() {
         super.onResume();
+        ensureDayBoundary();
+        refreshTodayTotal();
         if (poseEngine != null && cameraController == null
                 && checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCamera();
@@ -255,6 +301,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     @Override
     protected void onDestroy() {
         if (poseEngine != null) poseEngine.close();
+        if (statsStore != null) statsStore.close();
         super.onDestroy();
     }
 }
