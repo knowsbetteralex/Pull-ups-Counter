@@ -4,7 +4,9 @@
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
-        android:allowBackup="true"\n        android:fullBackupContent="@xml/backup_rules_legacy"\n        android:dataExtractionRules="@xml/backup_rules"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules_legacy"
+        android:dataExtractionRules="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="Pull-Up Counter"
         android:roundIcon="@mipmap/ic_launcher"
