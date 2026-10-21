@@ -41,7 +41,7 @@ public final class PullupDetector {
     private static final int LEFT_WRIST = 15;
     private static final int RIGHT_WRIST = 16;
 
-    private static final double DOWN_ANGLE = 155.0;
+    private static final double DOWN_ANGLE = 150.0;
     private static final double LEAVE_DOWN_ANGLE = 142.0;
     private static final double UP_ANGLE = 85.0;
     private static final double LEAVE_UP_ANGLE = 105.0;
