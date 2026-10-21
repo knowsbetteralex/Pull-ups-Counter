@@ -283,9 +283,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         repAnimationText.animate().cancel();
         repAnimationText.setText(Integer.toString(current));
         repAnimationText.setVisibility(View.VISIBLE);
-        repAnimationText.setAlpha(0f);
-        repAnimationText.setScaleX(0.82f);
-        repAnimationText.setScaleY(0.82f);
+        repAnimationText.setAlpha(1f);
+        repAnimationText.setScaleX(0.98f);
+        repAnimationText.setScaleY(0.98f);
         repAnimationText.setTranslationX(0f);
         repAnimationText.setTranslationY(0f);
 
@@ -305,18 +305,18 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             float dy = targetY - fromCenterY;
 
             repAnimationText.animate()
-                    .alpha(0.72f)
-                    .scaleX(1.08f)
-                    .scaleY(1.08f)
-                    .setDuration(130L)
+                    .alpha(1f)
+                    .scaleX(1.12f)
+                    .scaleY(1.12f)
+                    .setDuration(160L)
                     .withEndAction(() -> repAnimationText.animate()
                             .translationX(dx)
                             .translationY(dy)
                             .scaleX(0.22f)
                             .scaleY(0.22f)
-                            .alpha(0.08f)
+                            .alpha(0.06f)
                             .setInterpolator(new AccelerateDecelerateInterpolator())
-                            .setDuration(620L)
+                            .setDuration(650L)
                             .withEndAction(() -> {
                                 setScore(current, todayTotal);
                                 repAnimationText.setVisibility(View.INVISIBLE);
