@@ -95,8 +95,16 @@ public final class StatsStore extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("updated_at", now);
         values.put("reps", reps);
-        db.update("attempts", values, "id = ?", new String[]{Long.toString(attemptId)});
-        return attemptId;
+        int updatedRows = db.update("attempts", values, "id = ?",
+                new String[]{Long.toString(attemptId)});
+        if (updatedRows > 0) return attemptId;
+
+        // The row can disappear after a full history restore while MainActivity is paused.
+        ContentValues recreated = new ContentValues();
+        recreated.put("started_at", now);
+        recreated.put("updated_at", now);
+        recreated.put("reps", reps);
+        return db.insertOrThrow("attempts", null, recreated);
     }
 
     public int getTodayTotal() {
