@@ -121,7 +121,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             } else if (manualSelectionMode) {
                 stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
             } else {
-                stateText.setText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ");
+                stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
             }
         });
 
@@ -153,7 +153,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         resetAdviceSession();
 
         if (overlayView != null) overlayView.beginAutoBarSearch();
-        if (stateText != null) stateText.setText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+        if (stateText != null) stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
         if (debugText != null) {
             debugText.setText("Возьмитесь за перекладину и спокойно повисните на прямых руках");
         }
@@ -231,13 +231,13 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 }
 
                 if (points == null) {
-                    stateText.setText("ВСТАНЬТЕ ПОЛНОСТЬЮ В КАДР");
+                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
                     debugText.setText("");
                 } else if (!PullupDetector.isPoseReliable(points)) {
-                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ");
+                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
                     debugText.setText("");
                 } else if (autoObservation == null || !autoObservation.candidateFound) {
-                    stateText.setText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
                     debugText.setText("");
                 } else {
                     stateText.setText(String.format(Locale.US, "НЕ ДВИГАЙТЕСЬ • ПОИСК %d/%d",
