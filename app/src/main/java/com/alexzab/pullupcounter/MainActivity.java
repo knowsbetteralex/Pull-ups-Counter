@@ -119,9 +119,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 stateText.setText("ГОТОВ К ПОДТЯГИВАНИЯМ");
                 debugText.setText("Новая попытка • положение перекладины сохранено");
             } else if (manualSelectionMode) {
-                stateText.setText("РУЧНАЯ КОРРЕКТИРОВКА");
+                stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
             } else {
-                stateText.setText("АВТОПОИСК ПЕРЕКЛАДИНЫ");
+                stateText.setText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ");
             }
         });
 
@@ -153,7 +153,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         resetAdviceSession();
 
         if (overlayView != null) overlayView.beginAutoBarSearch();
-        if (stateText != null) stateText.setText("АВТОПОИСК ПЕРЕКЛАДИНЫ");
+        if (stateText != null) stateText.setText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
         if (debugText != null) {
             debugText.setText("Возьмитесь за перекладину и спокойно повисните на прямых руках");
         }
@@ -169,7 +169,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         overlayView.setBarYNormalized(null, false);
         overlayView.beginBarSelection();
-        stateText.setText("РУЧНАЯ КОРРЕКТИРОВКА");
+        stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
         debugText.setText("Коснитесь перекладины на изображении и подвиньте линию пальцем");
         speakAdvice("Коснитесь перекладины на изображении");
     }
@@ -195,7 +195,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         AutoBarDetector.Observation observation = null;
         boolean justAutoCalibrated = false;
 
-        if (autoCalibrating && !manualSelectionMode && !detector.isCalibrated() && points != null) {
+        if (autoCalibrating && !manualSelectionMode && !detector.isCalibrated()
+                && PullupDetector.isPoseReliable(points)) {
             observation = autoBarDetector.observe(latestFrame, points);
             if (observation.ready) {
                 detector.setCalibratedBarY(observation.normalizedY);
@@ -224,34 +225,36 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
             if (!detector.isCalibrated()) {
                 if (manualSelectionMode) {
-                    stateText.setText("РУЧНАЯ КОРРЕКТИРОВКА");
-                    debugText.setText("Коснитесь перекладины на изображении");
+                    stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
+                    debugText.setText("Ручная корректировка линии");
                     return;
                 }
 
-                stateText.setText("АВТОПОИСК ПЕРЕКЛАДИНЫ");
-                if (result.landmarks().isEmpty()) {
-                    debugText.setText("Встаньте в кадр и возьмитесь за перекладину");
+                if (points == null) {
+                    stateText.setText("ВСТАНЬТЕ ПОЛНОСТЬЮ В КАДР");
+                    debugText.setText("");
+                } else if (!PullupDetector.isPoseReliable(points)) {
+                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ");
+                    debugText.setText("");
                 } else if (autoObservation == null || !autoObservation.candidateFound) {
-                    debugText.setText("Повисните на прямых руках — кисти должны быть хорошо видны");
+                    stateText.setText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+                    debugText.setText("");
                 } else {
-                    debugText.setText(String.format(Locale.US,
-                            "Стабилизация %d/%d • %s • уверенность %.0f%%",
+                    stateText.setText(String.format(Locale.US, "НЕ ДВИГАЙТЕСЬ • ПОИСК %d/%d",
                             Math.min(autoObservation.stableSamples, autoBarDetector.getRequiredSamples()),
-                            autoBarDetector.getRequiredSamples(),
-                            autoObservation.edgeRefined ? "контур найден" : "по положению кистей",
-                            autoObservation.confidence * 100f));
+                            autoBarDetector.getRequiredSamples()));
+                    debugText.setText("");
                 }
                 return;
             }
 
-            if (result.landmarks().isEmpty()) {
-                stateText.setText("ЧЕЛОВЕК НЕ НАЙДЕН");
-                debugText.setText("Встаньте полностью в кадр");
+            if (points == null) {
+                stateText.setText("ВСТАНЬТЕ ПОЛНОСТЬЮ В КАДР");
+                debugText.setText("");
                 return;
             }
 
-            PullupDetector.Result r = detector.process(result.landmarks().get(0));
+            PullupDetector.Result r = detector.process(points);
             stateText.setText(stateName(r));
 
             if (r.countedNow) {
@@ -265,11 +268,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             handleAdvice(r);
 
             if (!r.poseReliable) {
-                debugText.setText("Плечи, локти или кисти видны недостаточно хорошо");
+                debugText.setText("");
             } else {
-                debugText.setText(String.format(Locale.US,
-                        "Локти %.0f° / %.0f°   •   линия %.3f   •   %d ms",
-                        r.leftAngle, r.rightAngle, r.barY, inferenceMs));
+                debugText.setText("");
             }
         });
     }
@@ -508,7 +509,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
     private static String stateName(PullupDetector.Result r) {
         if (!r.calibrated) return "КАЛИБРОВКА";
-        if (!r.poseReliable) return "ПОЗА НЕУВЕРЕННАЯ";
+        if (!r.poseReliable) return "ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ";
         switch (r.state) {
             case DOWN: return "МОЖНО НАЧИНАТЬ";
             case GOING_UP: return "ВВЕРХ ↑";
