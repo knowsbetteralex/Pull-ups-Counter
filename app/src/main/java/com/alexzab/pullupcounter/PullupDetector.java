@@ -40,6 +40,10 @@ public final class PullupDetector {
     private static final int RIGHT_ELBOW = 14;
     private static final int LEFT_WRIST = 15;
     private static final int RIGHT_WRIST = 16;
+    private static final int LEFT_HIP = 23;
+    private static final int RIGHT_HIP = 24;
+    private static final int LEFT_KNEE = 25;
+    private static final int RIGHT_KNEE = 26;
 
     private static final double DOWN_ANGLE = 150.0;
     private static final double LEAVE_DOWN_ANGLE = 142.0;
@@ -47,6 +51,9 @@ public final class PullupDetector {
     private static final double LEAVE_UP_ANGLE = 105.0;
     private static final double MOUTH_BAR_MARGIN = 0.015;
     private static final double MIN_VISIBILITY = 0.45;
+    private static final double LOWER_BODY_VISIBILITY = 0.35;
+    private static final double MIN_SHOULDER_TO_HIP_DROP = 0.08;
+    private static final double MIN_HIP_TO_KNEE_DROP = 0.04;
     private static final int STABLE_FRAMES = 3;
     private static final double EMA_ALPHA = 0.35;
 
@@ -93,7 +100,7 @@ public final class PullupDetector {
         final boolean calibrated = calibratedBarY != null;
         final double barY = calibrated ? calibratedBarY : Double.NaN;
 
-        if (p == null || p.size() < 17 || !isReliable(p)) {
+        if (!isPoseReliable(p)) {
             return new Result(count, State.WAITING, Double.NaN, Double.NaN,
                     barY, Double.NaN, false, false, calibrated);
         }
@@ -176,14 +183,33 @@ public final class PullupDetector {
                 barY, mouthY, countedNow, true, true);
     }
 
-    private static boolean isReliable(List<NormalizedLandmark> p) {
-        int[] ids = {MOUTH_LEFT, MOUTH_RIGHT, LEFT_SHOULDER, RIGHT_SHOULDER,
+    public static boolean isPoseReliable(List<NormalizedLandmark> p) {
+        if (p == null || p.size() < 27) return false;
+
+        int[] upperIds = {MOUTH_LEFT, MOUTH_RIGHT, LEFT_SHOULDER, RIGHT_SHOULDER,
                 LEFT_ELBOW, RIGHT_ELBOW, LEFT_WRIST, RIGHT_WRIST};
-        for (int id : ids) {
+        for (int id : upperIds) {
             float v = p.get(id).visibility().orElse(1.0f);
             if (v < MIN_VISIBILITY) return false;
         }
-        return true;
+
+        float leftHipVisibility = p.get(LEFT_HIP).visibility().orElse(1.0f);
+        float rightHipVisibility = p.get(RIGHT_HIP).visibility().orElse(1.0f);
+        if (leftHipVisibility < LOWER_BODY_VISIBILITY
+                || rightHipVisibility < LOWER_BODY_VISIBILITY) {
+            return false;
+        }
+
+        double shoulderY = (p.get(LEFT_SHOULDER).y() + p.get(RIGHT_SHOULDER).y()) * 0.5;
+        double hipY = (p.get(LEFT_HIP).y() + p.get(RIGHT_HIP).y()) * 0.5;
+        if (hipY < shoulderY + MIN_SHOULDER_TO_HIP_DROP) return false;
+
+        boolean leftKneeValid = p.get(LEFT_KNEE).visibility().orElse(1.0f) >= LOWER_BODY_VISIBILITY
+                && p.get(LEFT_KNEE).y() > hipY + MIN_HIP_TO_KNEE_DROP;
+        boolean rightKneeValid = p.get(RIGHT_KNEE).visibility().orElse(1.0f) >= LOWER_BODY_VISIBILITY
+                && p.get(RIGHT_KNEE).y() > hipY + MIN_HIP_TO_KNEE_DROP;
+
+        return leftKneeValid || rightKneeValid;
     }
 
     private static double angle(NormalizedLandmark a, NormalizedLandmark b, NormalizedLandmark c) {

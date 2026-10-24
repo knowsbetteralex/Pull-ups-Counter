@@ -3,7 +3,8 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="#000000"
+    android:keepScreenOn="true">
 
     <ImageView
         android:id="@+id/camera_view"
@@ -167,17 +168,23 @@
 
         <TextView
             android:id="@+id/state_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_hint"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:shadowColor="#CC000000"
+            android:maxWidth="350dp"
+            android:paddingStart="16dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="9dp"
+            android:shadowColor="#FF000000"
             android:shadowDx="0"
             android:shadowDy="2"
-            android:shadowRadius="5"
-            android:text="АВТОПОИСК ПЕРЕКЛАДИНЫ"
-            android:textColor="#CCFFFFFF"
-            android:textSize="27sp"
+            android:shadowRadius="4"
+            android:text="ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ"
+            android:textColor="#FFFFFFFF"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
@@ -194,7 +201,8 @@
             android:shadowRadius="4"
             android:text="Возьмитесь за перекладину и спокойно повисните"
             android:textColor="#99FFFFFF"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </FrameLayout>
