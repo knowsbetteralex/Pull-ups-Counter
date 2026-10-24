@@ -173,7 +173,8 @@
             android:background="@drawable/bg_hint"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:maxWidth="350dp"
+            android:maxWidth="340dp"
+            android:maxLines="3"
             android:paddingStart="16dp"
             android:paddingTop="9dp"
             android:paddingEnd="16dp"
@@ -182,9 +183,9 @@
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="4"
-            android:text="ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ"
+            android:text="ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ&#10;ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ"
             android:textColor="#FFFFFFFF"
-            android:textSize="25sp"
+            android:textSize="21sp"
             android:textStyle="bold" />
 
         <TextView
