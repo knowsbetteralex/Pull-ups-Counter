@@ -192,17 +192,6 @@ public final class OverlayView extends View {
                     - (guideTextPaint.ascent() + guideTextPaint.descent()) * 0.5f;
             canvas.drawText("ПРОВЕДИТЕ ЛИНИЮ ПО ПЕРЕКЛАДИНЕ", getWidth() * 0.5f,
                     baseline, guideTextPaint);
-        } else if (autoSearching) {
-            float boxTop = getHeight() * 0.78f;
-            float boxBottom = getHeight() * 0.86f;
-            canvas.drawRoundRect(new RectF(28f, boxTop, getWidth() - 28f, boxBottom),
-                    28f, 28f, guidePaint);
-            float baseline = (boxTop + boxBottom) * 0.5f
-                    - (guideTextPaint.ascent() + guideTextPaint.descent()) * 0.5f;
-            guideTextPaint.setTextSize(30f);
-            canvas.drawText("ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ",
-                    getWidth() * 0.5f, baseline, guideTextPaint);
-            guideTextPaint.setTextSize(36f);
         }
     }
 }
