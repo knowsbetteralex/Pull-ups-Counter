@@ -49,6 +49,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private ImageButton countTtsButton;
     private ImageButton adviceTtsButton;
     private ImageButton editAttemptButton;
+    private ImageButton historyButton;
     private LinearLayout editControls;
     private LinearLayout mainControls;
     private View scoreContainer;
@@ -107,6 +108,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         countTtsButton = findViewById(R.id.count_tts_button);
         adviceTtsButton = findViewById(R.id.advice_tts_button);
         editAttemptButton = findViewById(R.id.edit_attempt_button);
+        historyButton = findViewById(R.id.history_button);
         editControls = findViewById(R.id.edit_controls);
         mainControls = findViewById(R.id.main_controls);
 
@@ -119,12 +121,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         TextView editCancel = findViewById(R.id.edit_cancel_button);
 
         scoreContainer.setOnClickListener(v -> {
+            if (!editingAttempt) cycleScoreMode();
+        });
+        historyButton.setOnClickListener(v -> {
             if (!editingAttempt) {
                 startActivity(new Intent(this, HistoryActivity.class));
             }
-        });
-        scoreModeText.setOnClickListener(v -> {
-            if (!editingAttempt) cycleScoreMode();
         });
         editAttemptButton.setOnClickListener(v -> beginAttemptEdit());
         editMinus.setOnClickListener(v -> adjustAttemptEdit(-1));
