@@ -113,6 +113,48 @@ public final class StatsStore extends SQLiteOpenHelper {
         return getTotalBetween(start, end);
     }
 
+    public int getAllTimeTotal() {
+        SQLiteDatabase db = getReadableDatabase();
+        try (Cursor cursor = db.rawQuery(
+                "SELECT COALESCE(SUM(reps), 0) FROM attempts WHERE reps > 0", null)) {
+            return cursor.moveToFirst() ? cursor.getInt(0) : 0;
+        }
+    }
+
+    public long setAttemptReps(long attemptId, int reps) {
+        reps = Math.max(0, reps);
+        SQLiteDatabase db = getWritableDatabase();
+
+        if (attemptId <= 0) {
+            if (reps == 0) return -1L;
+            long now = System.currentTimeMillis();
+            ContentValues values = new ContentValues();
+            values.put("started_at", now);
+            values.put("updated_at", now);
+            values.put("reps", reps);
+            return db.insertOrThrow("attempts", null, values);
+        }
+
+        if (reps == 0) {
+            db.delete("attempts", "id = ?", new String[]{Long.toString(attemptId)});
+            return -1L;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("updated_at", System.currentTimeMillis());
+        values.put("reps", reps);
+        int updated = db.update("attempts", values, "id = ?",
+                new String[]{Long.toString(attemptId)});
+        if (updated > 0) return attemptId;
+
+        ContentValues recreated = new ContentValues();
+        long now = System.currentTimeMillis();
+        recreated.put("started_at", now);
+        recreated.put("updated_at", now);
+        recreated.put("reps", reps);
+        return db.insertOrThrow("attempts", null, recreated);
+    }
+
     public int getTotalBetween(long startInclusive, long endExclusive) {
         SQLiteDatabase db = getReadableDatabase();
         try (Cursor cursor = db.rawQuery(

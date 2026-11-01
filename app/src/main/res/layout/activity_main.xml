@@ -41,30 +41,128 @@
             android:orientation="vertical"
             android:paddingTop="5dp"
             android:paddingBottom="6dp"
-            android:contentDescription="Текущая попытка и сумма за сегодня. Нажмите, чтобы открыть историю">
+            android:contentDescription="Счёт. Нажмите, чтобы открыть историю">
 
             <TextView
+                android:id="@+id/score_mode_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="ПОПЫТКА  /  СЕГОДНЯ"
-                android:textColor="#88FFFFFF"
-                android:textSize="10sp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="2dp"
+                android:text="ПОПЫТКА / СЕГОДНЯ ↻"
+                android:textColor="#AAFFFFFF"
+                android:textSize="11sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/score_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:includeFontPadding="false"
-                android:text="0 / 0"
-                android:textColor="#FFFFFF"
-                android:textSize="44sp"
-                android:textStyle="bold" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="58dp">
+
+                <TextView
+                    android:id="@+id/score_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="0 / 0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="44sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/edit_attempt_button"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/bg_action_chip"
+                    android:contentDescription="Исправить текущую попытку"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_edit" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/edit_controls"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/edit_minus_button"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/bg_action_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="−"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/edit_plus_button"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/bg_action_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/edit_ok_button"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1.15"
+                    android:background="@drawable/bg_action_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="ОК"
+                    android:textColor="#37E6B4"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/edit_cancel_button"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1.35"
+                    android:background="@drawable/bg_action_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="Отмена"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/main_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -196,11 +294,7 @@
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:maxLines="2"
-            android:shadowColor="#CC000000"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="4"
-            android:text="Возьмитесь за перекладину и спокойно повисните"
+            android:text=""
             android:textColor="#99FFFFFF"
             android:textSize="16sp"
             android:visibility="gone" />
