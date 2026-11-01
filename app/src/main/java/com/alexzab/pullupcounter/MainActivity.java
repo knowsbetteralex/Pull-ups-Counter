@@ -3,6 +3,7 @@ package com.alexzab.pullupcounter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,19 +30,33 @@ import java.util.Locale;
 public final class MainActivity extends Activity implements PoseEngine.Listener, Camera2Controller.Listener {
     private static final int CAMERA_PERMISSION_REQUEST = 10;
     private static final long ADVICE_MIN_INTERVAL_MS = 2500L;
+    private static final String PREFS_NAME = "pullup_ui";
+    private static final String PREF_SCORE_MODE = "score_mode";
+
+    private enum ScoreMode {
+        ATTEMPT_TODAY,
+        TODAY,
+        ALL_TIME
+    }
 
     private ImageView cameraView;
     private OverlayView overlayView;
     private TextView scoreText;
+    private TextView scoreModeText;
     private TextView repAnimationText;
     private TextView stateText;
     private TextView debugText;
     private ImageButton countTtsButton;
     private ImageButton adviceTtsButton;
+    private ImageButton editAttemptButton;
+    private LinearLayout editControls;
+    private LinearLayout mainControls;
+    private View scoreContainer;
 
     private PoseEngine poseEngine;
     private Camera2Controller cameraController;
     private StatsStore statsStore;
+    private SharedPreferences preferences;
     private final PullupDetector detector = new PullupDetector();
     private final AutoBarDetector autoBarDetector = new AutoBarDetector();
 
@@ -51,6 +67,11 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private long activeAttemptId = -1L;
     private long activeDayStart;
     private int currentAttemptReps = 0;
+
+    private ScoreMode scoreMode = ScoreMode.ATTEMPT_TODAY;
+    private boolean editingAttempt = false;
+    private int editOriginalReps = 0;
+    private int editDraftReps = 0;
 
     private TextToSpeech tts;
     private boolean ttsReady = false;
@@ -71,23 +92,45 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         setContentView(R.layout.activity_main);
 
         statsStore = new StatsStore(this);
+        preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        scoreMode = loadScoreMode();
         activeDayStart = StatsStore.startOfDay(System.currentTimeMillis());
 
         cameraView = findViewById(R.id.camera_view);
         overlayView = findViewById(R.id.overlay_view);
+        scoreContainer = findViewById(R.id.score_container);
         scoreText = findViewById(R.id.score_text);
+        scoreModeText = findViewById(R.id.score_mode_text);
         repAnimationText = findViewById(R.id.rep_animation_text);
         stateText = findViewById(R.id.state_text);
         debugText = findViewById(R.id.debug_text);
         countTtsButton = findViewById(R.id.count_tts_button);
         adviceTtsButton = findViewById(R.id.advice_tts_button);
+        editAttemptButton = findViewById(R.id.edit_attempt_button);
+        editControls = findViewById(R.id.edit_controls);
+        mainControls = findViewById(R.id.main_controls);
 
         TextView reset = findViewById(R.id.reset_button);
         TextView manual = findViewById(R.id.calibrate_button);
         TextView auto = findViewById(R.id.auto_button);
+        TextView editMinus = findViewById(R.id.edit_minus_button);
+        TextView editPlus = findViewById(R.id.edit_plus_button);
+        TextView editOk = findViewById(R.id.edit_ok_button);
+        TextView editCancel = findViewById(R.id.edit_cancel_button);
 
-        findViewById(R.id.score_container).setOnClickListener(v ->
-                startActivity(new Intent(this, HistoryActivity.class)));
+        scoreContainer.setOnClickListener(v -> {
+            if (!editingAttempt) {
+                startActivity(new Intent(this, HistoryActivity.class));
+            }
+        });
+        scoreModeText.setOnClickListener(v -> {
+            if (!editingAttempt) cycleScoreMode();
+        });
+        editAttemptButton.setOnClickListener(v -> beginAttemptEdit());
+        editMinus.setOnClickListener(v -> adjustAttemptEdit(-1));
+        editPlus.setOnClickListener(v -> adjustAttemptEdit(1));
+        editOk.setOnClickListener(v -> finishAttemptEdit(true));
+        editCancel.setOnClickListener(v -> finishAttemptEdit(false));
 
         countTtsButton.setOnClickListener(v -> toggleCountSpeech());
         adviceTtsButton.setOnClickListener(v -> toggleAdviceSpeech());
@@ -102,12 +145,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             overlayView.setBarYNormalized(normalizedY, false);
             resetAdviceSession();
             stateText.setText("ПЕРЕКЛАДИНА ЗАДАНА ✓");
-            debugText.setText(String.format(Locale.US,
-                    "Ручная линия: y = %.3f • можно начинать", normalizedY));
+            debugText.setText("");
             speakAdvice("Перекладина задана");
         });
 
         reset.setOnClickListener(v -> {
+            if (editingAttempt) finishAttemptEdit(false);
             detector.reset();
             activeAttemptId = -1L;
             currentAttemptReps = 0;
@@ -117,7 +160,6 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
             if (detector.isCalibrated()) {
                 stateText.setText("ГОТОВ К ПОДТЯГИВАНИЯМ");
-                debugText.setText("Новая попытка • положение перекладины сохранено");
             } else if (manualSelectionMode) {
                 stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
             } else {
@@ -125,8 +167,14 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             }
         });
 
-        manual.setOnClickListener(v -> startManualCalibration());
-        auto.setOnClickListener(v -> startAutoCalibration());
+        manual.setOnClickListener(v -> {
+            if (editingAttempt) finishAttemptEdit(false);
+            startManualCalibration();
+        });
+        auto.setOnClickListener(v -> {
+            if (editingAttempt) finishAttemptEdit(false);
+            startAutoCalibration();
+        });
 
         refreshScore();
         startAutoCalibration();
@@ -145,6 +193,29 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         }
     }
 
+    private ScoreMode loadScoreMode() {
+        int stored = preferences.getInt(PREF_SCORE_MODE, ScoreMode.ATTEMPT_TODAY.ordinal());
+        ScoreMode[] values = ScoreMode.values();
+        if (stored < 0 || stored >= values.length) return ScoreMode.ATTEMPT_TODAY;
+        return values[stored];
+    }
+
+    private void cycleScoreMode() {
+        switch (scoreMode) {
+            case ATTEMPT_TODAY:
+                scoreMode = ScoreMode.TODAY;
+                break;
+            case TODAY:
+                scoreMode = ScoreMode.ALL_TIME;
+                break;
+            default:
+                scoreMode = ScoreMode.ATTEMPT_TODAY;
+                break;
+        }
+        preferences.edit().putInt(PREF_SCORE_MODE, scoreMode.ordinal()).apply();
+        refreshScore();
+    }
+
     private void startAutoCalibration() {
         autoCalibrating = true;
         manualSelectionMode = false;
@@ -153,10 +224,10 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         resetAdviceSession();
 
         if (overlayView != null) overlayView.beginAutoBarSearch();
-        if (stateText != null) stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
-        if (debugText != null) {
-            debugText.setText("Возьмитесь за перекладину и спокойно повисните на прямых руках");
+        if (stateText != null) {
+            stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
         }
+        if (debugText != null) debugText.setText("");
         speakAdvice("Возьмитесь за перекладину и спокойно повисните");
     }
 
@@ -170,7 +241,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         overlayView.setBarYNormalized(null, false);
         overlayView.beginBarSelection();
         stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
-        debugText.setText("Коснитесь перекладины на изображении и подвиньте линию пальцем");
+        debugText.setText("");
         speakAdvice("Коснитесь перекладины на изображении");
     }
 
@@ -195,7 +266,10 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         AutoBarDetector.Observation observation = null;
         boolean justAutoCalibrated = false;
 
-        if (autoCalibrating && !manualSelectionMode && !detector.isCalibrated()
+        if (!editingAttempt
+                && autoCalibrating
+                && !manualSelectionMode
+                && !detector.isCalibrated()
                 && PullupDetector.isPoseReliable(points)) {
             observation = autoBarDetector.observe(latestFrame, points);
             if (observation.ready) {
@@ -212,13 +286,15 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             ensureDayBoundary();
             overlayView.setResult(result, inputWidth, inputHeight);
 
+            if (editingAttempt) {
+                stateText.setText("ИСПРАВЬТЕ СЧЁТ ПОПЫТКИ");
+                return;
+            }
+
             if (autoReadyNow && autoObservation != null) {
                 overlayView.setBarYNormalized(autoObservation.normalizedY, true);
                 resetAdviceSession();
                 stateText.setText("ПЕРЕКЛАДИНА НАЙДЕНА ✓");
-                debugText.setText(String.format(Locale.US,
-                        "Авто y = %.3f • уверенность %.0f%% • если неточно — нажмите «Линия»",
-                        autoObservation.normalizedY, autoObservation.confidence * 100f));
                 speakAdvice("Перекладина найдена");
                 return;
             }
@@ -226,31 +302,21 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             if (!detector.isCalibrated()) {
                 if (manualSelectionMode) {
                     stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
-                    debugText.setText("Ручная корректировка линии");
                     return;
                 }
 
-                if (points == null) {
-                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
-                    debugText.setText("");
-                } else if (!PullupDetector.isPoseReliable(points)) {
-                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
-                    debugText.setText("");
-                } else if (autoObservation == null || !autoObservation.candidateFound) {
-                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
-                    debugText.setText("");
-                } else {
+                if (autoObservation != null && autoObservation.candidateFound) {
                     stateText.setText(String.format(Locale.US, "НЕ ДВИГАЙТЕСЬ • ПОИСК %d/%d",
                             Math.min(autoObservation.stableSamples, autoBarDetector.getRequiredSamples()),
                             autoBarDetector.getRequiredSamples()));
-                    debugText.setText("");
+                } else {
+                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
                 }
                 return;
             }
 
             if (points == null) {
                 stateText.setText("ВСТАНЬТЕ ПОЛНОСТЬЮ В КАДР");
-                debugText.setText("");
                 return;
             }
 
@@ -260,29 +326,38 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             if (r.countedNow) {
                 currentAttemptReps = r.count;
                 activeAttemptId = statsStore.saveAttemptProgress(activeAttemptId, currentAttemptReps);
+
                 int todayTotal = statsStore.getTodayTotal();
-                speakCount(currentAttemptReps);
-                animateCountChange(currentAttemptReps, todayTotal);
+                int allTimeTotal = statsStore.getAllTimeTotal();
+                int displayedCount = countForMode(currentAttemptReps, todayTotal, allTimeTotal);
+
+                speakCount(displayedCount);
+                animateCountChange(displayedCount, currentAttemptReps, todayTotal, allTimeTotal);
             }
 
             handleAdvice(r);
-
-            if (!r.poseReliable) {
-                debugText.setText("");
-            } else {
-                debugText.setText("");
-            }
         });
     }
 
-    private void animateCountChange(int current, int todayTotal) {
+    private int countForMode(int current, int today, int allTime) {
+        switch (scoreMode) {
+            case TODAY:
+                return today;
+            case ALL_TIME:
+                return allTime;
+            default:
+                return current;
+        }
+    }
+
+    private void animateCountChange(int displayedCount, int current, int todayTotal, int allTimeTotal) {
         if (repAnimationText == null || scoreText == null) {
-            setScore(current, todayTotal);
+            renderScore(current, todayTotal, allTimeTotal);
             return;
         }
 
         repAnimationText.animate().cancel();
-        repAnimationText.setText(Integer.toString(current));
+        repAnimationText.setText(Integer.toString(displayedCount));
         repAnimationText.setVisibility(View.VISIBLE);
         repAnimationText.setAlpha(1f);
         repAnimationText.setScaleX(0.98f);
@@ -299,8 +374,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             float fromCenterX = from[0] + repAnimationText.getWidth() * 0.5f;
             float fromCenterY = from[1] + repAnimationText.getHeight() * 0.5f;
 
-            // Current attempt is the left-hand value in "attempt / today".
-            float targetX = target[0] + scoreText.getWidth() * 0.28f;
+            float targetFraction = scoreMode == ScoreMode.ATTEMPT_TODAY ? 0.28f : 0.5f;
+            float targetX = target[0] + scoreText.getWidth() * targetFraction;
             float targetY = target[1] + scoreText.getHeight() * 0.5f;
             float dx = targetX - fromCenterX;
             float dy = targetY - fromCenterY;
@@ -319,7 +394,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                             .setInterpolator(new AccelerateDecelerateInterpolator())
                             .setDuration(650L)
                             .withEndAction(() -> {
-                                setScore(current, todayTotal);
+                                renderScore(current, todayTotal, allTimeTotal);
                                 repAnimationText.setVisibility(View.INVISIBLE);
                                 repAnimationText.setTranslationX(0f);
                                 repAnimationText.setTranslationY(0f);
@@ -339,9 +414,41 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         });
     }
 
-    private void setScore(int current, int total) {
+    private void renderScore(int current, int today, int allTime) {
+        if (editingAttempt) {
+            renderEditDraft();
+            return;
+        }
+
+        switch (scoreMode) {
+            case TODAY:
+                scoreModeText.setText("СЕГОДНЯ  ↻");
+                scoreText.setTextSize(49f);
+                scoreText.setTextColor(Color.WHITE);
+                scoreText.setText(Integer.toString(today));
+                editAttemptButton.setVisibility(View.GONE);
+                break;
+
+            case ALL_TIME:
+                scoreModeText.setText("ЗА ВСЁ ВРЕМЯ  ↻");
+                scoreText.setTextSize(49f);
+                scoreText.setTextColor(Color.WHITE);
+                scoreText.setText(Integer.toString(allTime));
+                editAttemptButton.setVisibility(View.GONE);
+                break;
+
+            default:
+                scoreModeText.setText("ПОПЫТКА / СЕГОДНЯ  ↻");
+                scoreText.setTextSize(44f);
+                editAttemptButton.setVisibility(View.VISIBLE);
+                setAttemptTodayScore(current, today);
+                break;
+        }
+    }
+
+    private void setAttemptTodayScore(int current, int today) {
         String left = Integer.toString(current);
-        String right = Integer.toString(total);
+        String right = Integer.toString(today);
         String value = left + " / " + right;
         SpannableString styled = new SpannableString(value);
 
@@ -358,9 +465,65 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         scoreText.setText(styled);
     }
 
+    private void beginAttemptEdit() {
+        if (scoreMode != ScoreMode.ATTEMPT_TODAY || editingAttempt) return;
+
+        repAnimationText.animate().cancel();
+        repAnimationText.setVisibility(View.INVISIBLE);
+
+        editingAttempt = true;
+        editOriginalReps = currentAttemptReps;
+        editDraftReps = currentAttemptReps;
+
+        editAttemptButton.setVisibility(View.GONE);
+        editControls.setVisibility(View.VISIBLE);
+        mainControls.setVisibility(View.GONE);
+        scoreModeText.setText("ИСПРАВЛЕНИЕ ПОПЫТКИ");
+        stateText.setText("ИСПРАВЬТЕ СЧЁТ ПОПЫТКИ");
+        renderEditDraft();
+    }
+
+    private void adjustAttemptEdit(int delta) {
+        if (!editingAttempt) return;
+        editDraftReps = Math.max(0, editDraftReps + delta);
+        renderEditDraft();
+    }
+
+    private void renderEditDraft() {
+        int storedToday = statsStore.getTodayTotal();
+        int previewToday = Math.max(0, storedToday + editDraftReps - editOriginalReps);
+        scoreText.setTextSize(44f);
+        setAttemptTodayScore(editDraftReps, previewToday);
+    }
+
+    private void finishAttemptEdit(boolean save) {
+        if (!editingAttempt) return;
+
+        if (save) {
+            currentAttemptReps = editDraftReps;
+            activeAttemptId = statsStore.setAttemptReps(activeAttemptId, currentAttemptReps);
+            detector.setCount(currentAttemptReps);
+        }
+
+        editingAttempt = false;
+        editControls.setVisibility(View.GONE);
+        mainControls.setVisibility(View.VISIBLE);
+        editOriginalReps = 0;
+        editDraftReps = 0;
+
+        refreshScore();
+        stateText.setText(save ? "СЧЁТ ИСПРАВЛЕН ✓" : "ИЗМЕНЕНИЯ ОТМЕНЕНЫ");
+    }
+
     private void ensureDayBoundary() {
         long todayStart = StatsStore.startOfDay(System.currentTimeMillis());
         if (todayStart == activeDayStart) return;
+
+        if (editingAttempt) {
+            editingAttempt = false;
+            editControls.setVisibility(View.GONE);
+            mainControls.setVisibility(View.VISIBLE);
+        }
 
         activeDayStart = todayStart;
         activeAttemptId = -1L;
@@ -371,9 +534,10 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private void refreshScore() {
-        if (scoreText != null && statsStore != null) {
-            setScore(currentAttemptReps, statsStore.getTodayTotal());
-        }
+        if (scoreText == null || statsStore == null) return;
+        int today = statsStore.getTodayTotal();
+        int allTime = statsStore.getAllTimeTotal();
+        renderScore(currentAttemptReps, today, allTime);
     }
 
     private void toggleCountSpeech() {
@@ -429,10 +593,10 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         button.setContentDescription(enabled ? enabledDescription : disabledDescription);
     }
 
-    private void speakCount(int count) {
+    private void speakCount(int value) {
         if (!countSpeechEnabled || !ttsReady || tts == null) return;
         long now = SystemClock.uptimeMillis();
-        tts.speak(Integer.toString(count), TextToSpeech.QUEUE_FLUSH,
+        tts.speak(Integer.toString(value), TextToSpeech.QUEUE_FLUSH,
                 null, "count_" + now);
     }
 
