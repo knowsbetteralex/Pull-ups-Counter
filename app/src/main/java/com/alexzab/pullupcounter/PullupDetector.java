@@ -93,6 +93,10 @@ public final class PullupDetector {
         count = Math.max(0, correctedCount);
     }
 
+    public void resetMotionTracking() {
+        resetMotionState();
+    }
+
     private void resetMotionState() {
         state = State.WAITING;
         downStable = 0;

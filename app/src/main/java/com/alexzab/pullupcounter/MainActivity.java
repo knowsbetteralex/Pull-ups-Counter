@@ -50,6 +50,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private ImageButton adviceTtsButton;
     private ImageButton editAttemptButton;
     private ImageButton historyButton;
+    private ImageButton pauseButton;
     private LinearLayout editControls;
     private LinearLayout mainControls;
     private View scoreContainer;
@@ -71,6 +72,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
     private ScoreMode scoreMode = ScoreMode.ATTEMPT_TODAY;
     private boolean editingAttempt = false;
+    private boolean paused = false;
     private int editOriginalReps = 0;
     private int editDraftReps = 0;
 
@@ -109,6 +111,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         adviceTtsButton = findViewById(R.id.advice_tts_button);
         editAttemptButton = findViewById(R.id.edit_attempt_button);
         historyButton = findViewById(R.id.history_button);
+        pauseButton = findViewById(R.id.pause_button);
         editControls = findViewById(R.id.edit_controls);
         mainControls = findViewById(R.id.main_controls);
 
@@ -134,6 +137,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         editOk.setOnClickListener(v -> finishAttemptEdit(true));
         editCancel.setOnClickListener(v -> finishAttemptEdit(false));
 
+        pauseButton.setOnClickListener(v -> togglePause());
         countTtsButton.setOnClickListener(v -> toggleCountSpeech());
         adviceTtsButton.setOnClickListener(v -> toggleAdviceSpeech());
         updateTtsButtons();
@@ -257,7 +261,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     public void onFrame(Bitmap bitmap) {
         latestFrame = bitmap;
         runOnUiThread(() -> cameraView.setImageBitmap(bitmap));
-        if (poseEngine != null) poseEngine.detect(bitmap);
+        if (!paused && poseEngine != null) poseEngine.detect(bitmap);
     }
 
     @Override
@@ -286,6 +290,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         runOnUiThread(() -> {
             ensureDayBoundary();
+
+            if (paused) {
+                stateText.setText("ПАУЗА");
+                return;
+            }
+
             overlayView.setResult(result, inputWidth, inputHeight);
 
             if (editingAttempt) {
@@ -542,6 +552,37 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         renderScore(currentAttemptReps, today, allTime);
     }
 
+    private void togglePause() {
+        paused = !paused;
+
+        if (paused) {
+            if (tts != null) tts.stop();
+            repAnimationText.animate().cancel();
+            repAnimationText.setVisibility(View.INVISIBLE);
+            pauseButton.setImageResource(R.drawable.ic_play);
+            pauseButton.setColorFilter(Color.rgb(55, 230, 180));
+            pauseButton.setContentDescription("Продолжить");
+            stateText.setText("ПАУЗА");
+            return;
+        }
+
+        detector.resetMotionTracking();
+        if (autoCalibrating) autoBarDetector.reset();
+        resetAdviceSession();
+
+        pauseButton.setImageResource(R.drawable.ic_pause);
+        pauseButton.setColorFilter(Color.WHITE);
+        pauseButton.setContentDescription("Пауза");
+
+        if (detector.isCalibrated()) {
+            stateText.setText("ГОТОВ К ПОДТЯГИВАНИЯМ");
+        } else if (manualSelectionMode) {
+            stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
+        } else {
+            stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+        }
+    }
+
     private void toggleCountSpeech() {
         countSpeechEnabled = !countSpeechEnabled;
         if (countSpeechEnabled) ensureTts();
@@ -596,14 +637,14 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private void speakCount(int value) {
-        if (!countSpeechEnabled || !ttsReady || tts == null) return;
+        if (paused || !countSpeechEnabled || !ttsReady || tts == null) return;
         long now = SystemClock.uptimeMillis();
         tts.speak(Integer.toString(value), TextToSpeech.QUEUE_FLUSH,
                 null, "count_" + now);
     }
 
     private boolean speakAdvice(String text) {
-        if (!adviceSpeechEnabled || !ttsReady || tts == null) return false;
+        if (paused || !adviceSpeechEnabled || !ttsReady || tts == null) return false;
 
         long now = SystemClock.uptimeMillis();
         if (now - lastAdviceAtMs < ADVICE_MIN_INTERVAL_MS) return false;
