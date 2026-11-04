@@ -53,11 +53,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private ImageButton adviceTtsButton;
     private ImageButton editAttemptButton;
     private ImageButton historyButton;
-    private ImageButton pauseButton;
     private LinearLayout editControls;
     private LinearLayout mainControls;
     private LinearLayout instructionContainer;
     private View scoreContainer;
+    private View rootView;
+    private ImageView pauseOverlay;
 
     private PoseEngine poseEngine;
     private Camera2Controller cameraController;
@@ -77,6 +78,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private ScoreMode scoreMode = ScoreMode.ATTEMPT_TODAY;
     private boolean editingAttempt = false;
     private boolean paused = false;
+    private boolean manualCalibrationPreferred = false;
+    private boolean resumeWithManualCalibration = false;
     private int editOriginalReps = 0;
     private int editDraftReps = 0;
 
@@ -105,6 +108,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         cameraView = findViewById(R.id.camera_view);
         overlayView = findViewById(R.id.overlay_view);
+        rootView = findViewById(R.id.root_view);
         scoreContainer = findViewById(R.id.score_container);
         scoreText = findViewById(R.id.score_text);
         scoreModeText = findViewById(R.id.score_mode_text);
@@ -115,7 +119,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         adviceTtsButton = findViewById(R.id.advice_tts_button);
         editAttemptButton = findViewById(R.id.edit_attempt_button);
         historyButton = findViewById(R.id.history_button);
-        pauseButton = findViewById(R.id.pause_button);
+        pauseOverlay = findViewById(R.id.pause_overlay);
         editControls = findViewById(R.id.edit_controls);
         mainControls = findViewById(R.id.main_controls);
         instructionContainer = findViewById(R.id.instruction_container);
@@ -143,7 +147,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         editOk.setOnClickListener(v -> finishAttemptEdit(true));
         editCancel.setOnClickListener(v -> finishAttemptEdit(false));
 
-        pauseButton.setOnClickListener(v -> togglePause());
+        rootView.setOnClickListener(v -> {
+            if (!editingAttempt && !manualSelectionMode) togglePause();
+        });
         countTtsButton.setOnClickListener(v -> toggleCountSpeech());
         adviceTtsButton.setOnClickListener(v -> toggleAdviceSpeech());
         updateTtsButtons();
@@ -151,6 +157,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         overlayView.setBarSelectionListener(normalizedY -> {
             manualSelectionMode = false;
+            manualCalibrationPreferred = true;
             autoCalibrating = false;
             autoBarDetector.reset();
             detector.setCalibratedBarY(normalizedY);
@@ -229,6 +236,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private void startAutoCalibration() {
+        manualCalibrationPreferred = false;
         autoCalibrating = true;
         manualSelectionMode = false;
         autoBarDetector.reset();
@@ -244,6 +252,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private void startManualCalibration() {
+        manualCalibrationPreferred = true;
         autoCalibrating = false;
         manualSelectionMode = true;
         autoBarDetector.reset();
@@ -297,10 +306,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         runOnUiThread(() -> {
             ensureDayBoundary();
 
-            if (paused) {
-                stateText.setText("ПАУЗА");
-                return;
-            }
+            if (paused) return;
 
             overlayView.setResult(result, inputWidth, inputHeight);
 
@@ -567,31 +573,33 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         paused = !paused;
 
         if (paused) {
+            resumeWithManualCalibration = manualCalibrationPreferred || manualSelectionMode;
+
             if (tts != null) tts.stop();
             repAnimationText.animate().cancel();
             repAnimationText.setVisibility(View.INVISIBLE);
-            if (overlayView != null) overlayView.clearPose();
-            pauseButton.setImageResource(R.drawable.ic_play);
-            pauseButton.setColorFilter(Color.rgb(55, 230, 180));
-            pauseButton.setContentDescription("Продолжить");
-            stateText.setText("ПАУЗА");
+
+            detector.clearCalibration();
+            autoBarDetector.reset();
+            manualSelectionMode = false;
+            autoCalibrating = false;
+
+            if (overlayView != null) overlayView.clearForPause();
+            if (pauseOverlay != null) pauseOverlay.setVisibility(View.VISIBLE);
+            if (instructionContainer != null) instructionContainer.setVisibility(View.GONE);
             return;
         }
 
+        if (pauseOverlay != null) pauseOverlay.setVisibility(View.GONE);
+        if (instructionContainer != null) instructionContainer.setVisibility(View.VISIBLE);
+
         detector.resetMotionTracking();
-        if (autoCalibrating) autoBarDetector.reset();
         resetAdviceSession();
 
-        pauseButton.setImageResource(R.drawable.ic_pause);
-        pauseButton.setColorFilter(Color.WHITE);
-        pauseButton.setContentDescription("Пауза");
-
-        if (detector.isCalibrated()) {
-            stateText.setText("ГОТОВ К ПОДТЯГИВАНИЯМ");
-        } else if (manualSelectionMode) {
-            stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
+        if (resumeWithManualCalibration) {
+            startManualCalibration();
         } else {
-            stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+            startAutoCalibration();
         }
     }
 
