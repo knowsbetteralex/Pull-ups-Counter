@@ -16,16 +16,15 @@
 
         <FrameLayout
             android:id="@+id/splash_logo"
-            android:layout_width="116dp"
-            android:layout_height="116dp"
-            android:background="@drawable/bg_logo_circle"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             android:elevation="10dp">
 
             <ImageView
-                android:layout_width="108dp"
-                android:layout_height="108dp"
+                android:layout_width="124dp"
+                android:layout_height="124dp"
                 android:layout_gravity="center"
-                android:contentDescription="Pull-Up Counter"
+                android:background="@drawable/bg_logo_circle"\n                android:clipToOutline="true"\n                android:contentDescription="Pull-Up Counter"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_art" />
         </FrameLayout>
