@@ -22,11 +22,11 @@
             android:elevation="10dp">
 
             <ImageView
-                android:layout_width="92dp"
-                android:layout_height="92dp"
+                android:layout_width="108dp"
+                android:layout_height="108dp"
                 android:layout_gravity="center"
                 android:contentDescription="Pull-Up Counter"
-                android:src="@drawable/ic_launcher_foreground" />
+                android:scaleType="centerCrop"\n                android:src="@drawable/ic_launcher_art" />
         </FrameLayout>
 
         <TextView
