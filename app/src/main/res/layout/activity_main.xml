@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:clickable="true"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/camera_view"
@@ -227,17 +229,6 @@
                 android:textSize="12sp" />
 
             <ImageButton
-                android:id="@+id/pause_button"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/bg_action_chip"
-                android:contentDescription="Пауза"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_pause" />
-
-            <ImageButton
                 android:id="@+id/count_tts_button"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
@@ -260,6 +251,16 @@
                 android:src="@drawable/ic_tts_coach" />
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/pause_overlay"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
+        android:layout_gravity="center"
+        android:alpha="0.58"
+        android:contentDescription="Пауза. Коснитесь экрана, чтобы продолжить"
+        android:src="@drawable/ic_pause_overlay"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/rep_animation_text"

@@ -106,6 +106,14 @@ public final class OverlayView extends View {
         postInvalidateOnAnimation();
     }
 
+    public void clearForPause() {
+        result = null;
+        barYNormalized = null;
+        selectingBar = false;
+        autoSearching = false;
+        postInvalidateOnAnimation();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!selectingBar) return false;
