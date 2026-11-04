@@ -276,12 +276,13 @@
         android:visibility="invisible" />
 
     <LinearLayout
+        android:id="@+id/instruction_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:orientation="vertical">
 

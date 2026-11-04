@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
@@ -14,6 +15,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -53,6 +56,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private ImageButton pauseButton;
     private LinearLayout editControls;
     private LinearLayout mainControls;
+    private LinearLayout instructionContainer;
     private View scoreContainer;
 
     private PoseEngine poseEngine;
@@ -114,6 +118,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         pauseButton = findViewById(R.id.pause_button);
         editControls = findViewById(R.id.edit_controls);
         mainControls = findViewById(R.id.main_controls);
+        instructionContainer = findViewById(R.id.instruction_container);
+        installInstructionInsets();
 
         TextView reset = findViewById(R.id.reset_button);
         TextView manual = findViewById(R.id.calibrate_button);
@@ -438,7 +444,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 scoreText.setTextSize(49f);
                 scoreText.setTextColor(Color.WHITE);
                 scoreText.setText(Integer.toString(today));
-                editAttemptButton.setVisibility(View.GONE);
+                editAttemptButton.setVisibility(View.VISIBLE);
                 break;
 
             case ALL_TIME:
@@ -446,7 +452,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 scoreText.setTextSize(49f);
                 scoreText.setTextColor(Color.WHITE);
                 scoreText.setText(Integer.toString(allTime));
-                editAttemptButton.setVisibility(View.GONE);
+                editAttemptButton.setVisibility(View.VISIBLE);
                 break;
 
             default:
@@ -478,7 +484,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private void beginAttemptEdit() {
-        if (scoreMode != ScoreMode.ATTEMPT_TODAY || editingAttempt) return;
+        if (editingAttempt) return;
+
+        if (scoreMode != ScoreMode.ATTEMPT_TODAY) {
+            scoreMode = ScoreMode.ATTEMPT_TODAY;
+            preferences.edit().putInt(PREF_SCORE_MODE, scoreMode.ordinal()).apply();
+        }
 
         repAnimationText.animate().cancel();
         repAnimationText.setVisibility(View.INVISIBLE);
@@ -559,6 +570,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             if (tts != null) tts.stop();
             repAnimationText.animate().cancel();
             repAnimationText.setVisibility(View.INVISIBLE);
+            if (overlayView != null) overlayView.clearPose();
             pauseButton.setImageResource(R.drawable.ic_play);
             pauseButton.setColorFilter(Color.rgb(55, 230, 180));
             pauseButton.setContentDescription("Продолжить");
@@ -746,6 +758,33 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         } else {
             showError("Нужно разрешение на камеру");
         }
+    }
+
+    private void installInstructionInsets() {
+        if (instructionContainer == null) return;
+
+        instructionContainer.setOnApplyWindowInsetsListener((view, insets) -> {
+            int navBottom;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                navBottom = insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
+            } else {
+                navBottom = insets.getSystemWindowInsetBottom();
+            }
+
+            ViewGroup.MarginLayoutParams lp =
+                    (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            int desiredBottom = navBottom + dp(12);
+            if (lp.bottomMargin != desiredBottom) {
+                lp.bottomMargin = desiredBottom;
+                view.setLayoutParams(lp);
+            }
+            return insets;
+        });
+        instructionContainer.requestApplyInsets();
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
     @Override
