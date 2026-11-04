@@ -24,7 +24,9 @@
                 android:layout_width="124dp"
                 android:layout_height="124dp"
                 android:layout_gravity="center"
-                android:background="@drawable/bg_logo_circle"\n                android:clipToOutline="true"\n                android:contentDescription="Pull-Up Counter"
+                android:background="@drawable/bg_logo_circle"
+                android:clipToOutline="true"
+                android:contentDescription="Pull-Up Counter"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_art" />
         </FrameLayout>
