@@ -11,4 +11,13 @@
 <string name="settings_applied_restart">Язык применится после повторного открытия экрана</string><string name="backup_saved">Резервная копия сохранена</string><string name="backup_error_save">Не удалось сохранить копию: %1$s</string><string name="backup_error_read">Не удалось прочитать копию: %1$s</string><string name="restore_title">Восстановить данные</string><string name="restore_message">Объединить копию с текущей историей или заменить текущую историю?</string><string name="merge">Объединить</string><string name="replace">Заменить</string><string name="cancel">Отмена</string><string name="ok">ОК</string>
 <string name="history_title">ИСТОРИЯ</string><string name="history_subtitle">Все сохранённые попытки по дням</string><string name="history_empty">История пока пуста
 Сделайте первое подтягивание</string><string name="day_total">%1$d за день</string><string name="reps_count">%1$d повтор.</string><string name="splash_subtitle">Каждое повторение — в счёт</string>
+
+<string name="draw_bar_line">ПРОВЕДИТЕ ЛИНИЮ ПО ПЕРЕКЛАДИНЕ</string>
+<string name="calibration">КАЛИБРОВКА</string>
+<string name="error">ОШИБКА</string>
+<string name="unknown_error">Неизвестная ошибка</string>
+<string name="camera_permission_required">Нужно разрешение на камеру</string>
+<string name="mediapipe_error">MediaPipe не запустился: %1$s</string>
+<string name="tts_unavailable">TTS недоступен на этом устройстве</string>
+<string name="backup_file_hint">Файл можно сохранить локально или в облачный диск через системный выбор файлов</string>
 </resources>
