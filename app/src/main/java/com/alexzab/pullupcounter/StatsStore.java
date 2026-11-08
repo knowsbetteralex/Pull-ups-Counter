@@ -223,14 +223,14 @@ public final class StatsStore extends SQLiteOpenHelper {
             throw new JSONException("Неподдерживаемая версия резервной копии: " + version);
         }
 
-        JSONObject settingsJson = root.optJSONObject("settings");
-        if (settingsJson != null) {
-            new AppSettings(appContext).importJson(settingsJson);
-        }
-
         JSONArray attempts = root.optJSONArray("attempts");
         if (attempts == null) {
             throw new JSONException("В резервной копии нет списка попыток");
+        }
+
+        JSONObject settingsJson = root.optJSONObject("settings");
+        if (settingsJson != null) {
+            new AppSettings(appContext).importJson(settingsJson);
         }
 
         SQLiteDatabase db = getWritableDatabase();
