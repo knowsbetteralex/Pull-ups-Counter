@@ -22,7 +22,9 @@ public final class StatsStore extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
 
     private static final String BACKUP_FORMAT = "pullup-counter-backup";
-    private static final int BACKUP_VERSION = 1;
+    private static final int BACKUP_VERSION = 2;
+
+    private final Context appContext;
 
     public static final class Attempt {
         public final long startedAt;
@@ -62,6 +64,7 @@ public final class StatsStore extends SQLiteOpenHelper {
 
     public StatsStore(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        appContext = context.getApplicationContext();
     }
 
     @Override
@@ -204,6 +207,7 @@ public final class StatsStore extends SQLiteOpenHelper {
         }
 
         root.put("attempts", attempts);
+        root.put("settings", new AppSettings(appContext).toJson());
         return root.toString(2);
     }
 
@@ -222,6 +226,11 @@ public final class StatsStore extends SQLiteOpenHelper {
         JSONArray attempts = root.optJSONArray("attempts");
         if (attempts == null) {
             throw new JSONException("В резервной копии нет списка попыток");
+        }
+
+        JSONObject settingsJson = root.optJSONObject("settings");
+        if (settingsJson != null) {
+            new AppSettings(appContext).importJson(settingsJson);
         }
 
         SQLiteDatabase db = getWritableDatabase();

@@ -2,6 +2,7 @@ package com.alexzab.pullupcounter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -30,10 +31,16 @@ public final class HistoryActivity extends Activity {
     private StatsStore statsStore;
     private LinearLayout historyContainer;
     private TextView emptyText;
-    private final Locale ru = new Locale("ru", "RU");
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleController.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(ThemeController.resolve(this));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
@@ -182,7 +189,7 @@ public final class HistoryActivity extends Activity {
         List<StatsStore.DayHistory> history = statsStore.loadHistory();
         emptyText.setVisibility(history.isEmpty() ? View.VISIBLE : View.GONE);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM, EEE", ru);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM, EEE", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
         for (StatsStore.DayHistory day : history) {
@@ -204,12 +211,12 @@ public final class HistoryActivity extends Activity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
 
-            TextView date = text(dateFormat.format(new Date(day.dayStart)).toUpperCase(ru),
-                    16, Color.WHITE, true);
+            TextView date = text(dateFormat.format(new Date(day.dayStart)).toUpperCase(Locale.getDefault()),
+                    16, primaryColor(), true);
             top.addView(date, new LinearLayout.LayoutParams(
                     0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
-            TextView total = text(day.total + " за день", 15,
+            TextView total = text(getString(R.string.day_total, day.total), 15,
                     Color.rgb(55, 230, 180), true);
             top.addView(total);
 
@@ -223,12 +230,12 @@ public final class HistoryActivity extends Activity {
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
                 TextView time = text(timeFormat.format(new Date(attempt.startedAt)),
-                        14, Color.argb(180, 255, 255, 255), false);
+                        14, secondaryColor(), false);
                 row.addView(time, new LinearLayout.LayoutParams(
                         dp(62), LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                String repsText = attempt.reps + " " + repsWord(attempt.reps);
-                TextView reps = text(repsText, 15, Color.WHITE, false);
+                String repsText = getString(R.string.reps_count, attempt.reps);
+                TextView reps = text(repsText, 15, primaryColor(), false);
                 row.addView(reps, new LinearLayout.LayoutParams(
                         0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
             }
@@ -266,6 +273,23 @@ public final class HistoryActivity extends Activity {
         if (mod10 == 1) return "повторение";
         if (mod10 >= 2 && mod10 <= 4) return "повторения";
         return "повторений";
+    }
+
+    private int primaryColor() {
+        return isLight() ? Color.rgb(20, 28, 32) : Color.WHITE;
+    }
+
+    private int secondaryColor() {
+        return isLight() ? Color.rgb(92, 104, 110) : Color.argb(180, 255, 255, 255);
+    }
+
+    private boolean isLight() {
+        String theme = new AppSettings(this).getTheme();
+        if ("light".equals(theme)) return true;
+        if ("dark".equals(theme)) return false;
+        int mode = getResources().getConfiguration().uiMode
+                & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return mode != android.content.res.Configuration.UI_MODE_NIGHT_YES;
     }
 
     private int dp(int value) {

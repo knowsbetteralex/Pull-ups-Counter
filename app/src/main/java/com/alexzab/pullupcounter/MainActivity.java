@@ -2,6 +2,7 @@ package com.alexzab.pullupcounter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -63,7 +64,10 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private PoseEngine poseEngine;
     private Camera2Controller cameraController;
     private StatsStore statsStore;
+    private AppSettings appSettings;
     private SharedPreferences preferences;
+    private String activeLanguage;
+    private String activeTheme;
     private final PullupDetector detector = new PullupDetector();
     private final AutoBarDetector autoBarDetector = new AutoBarDetector();
 
@@ -97,11 +101,21 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private boolean goingUpAdviceSpoken = false;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleController.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(ThemeController.resolve(this));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         statsStore = new StatsStore(this);
+        appSettings = new AppSettings(this);
+        activeLanguage = appSettings.getLanguage();
+        activeTheme = appSettings.getTheme();
+        detector.applySettings(appSettings);
         preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         scoreMode = loadScoreMode();
         activeDayStart = StatsStore.startOfDay(System.currentTimeMillis());
@@ -117,6 +131,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         debugText = findViewById(R.id.debug_text);
         countTtsButton = findViewById(R.id.count_tts_button);
         adviceTtsButton = findViewById(R.id.advice_tts_button);
+        ImageButton settingsButton = findViewById(R.id.settings_button);
         editAttemptButton = findViewById(R.id.edit_attempt_button);
         historyButton = findViewById(R.id.history_button);
         pauseOverlay = findViewById(R.id.pause_overlay);
@@ -150,6 +165,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         rootView.setOnClickListener(v -> {
             if (!editingAttempt && !manualSelectionMode) togglePause();
         });
+        settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
         countTtsButton.setOnClickListener(v -> toggleCountSpeech());
         adviceTtsButton.setOnClickListener(v -> toggleAdviceSpeech());
         updateTtsButtons();
@@ -163,9 +179,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             detector.setCalibratedBarY(normalizedY);
             overlayView.setBarYNormalized(normalizedY, false);
             resetAdviceSession();
-            stateText.setText("ПЕРЕКЛАДИНА ЗАДАНА ✓");
+            stateText.setText(getString(R.string.bar_set));
             debugText.setText("");
-            speakAdvice("Перекладина задана");
+            speakAdvice(getString(R.string.tts_bar_set));
         });
 
         reset.setOnClickListener(v -> {
@@ -178,11 +194,11 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             refreshScore();
 
             if (detector.isCalibrated()) {
-                stateText.setText("ГОТОВ К ПОДТЯГИВАНИЯМ");
+                stateText.setText(getString(R.string.ready));
             } else if (manualSelectionMode) {
-                stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
+                stateText.setText(getString(R.string.touch_bar));
             } else {
-                stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+                stateText.setText(getString(R.string.show_body_and_hang));
             }
         });
 
@@ -201,7 +217,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         try {
             poseEngine = new PoseEngine(this, this);
         } catch (RuntimeException e) {
-            showError("MediaPipe не запустился: " + e.getMessage());
+            showError(getString(R.string.mediapipe_error, e.getMessage()));
             return;
         }
 
@@ -213,7 +229,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private ScoreMode loadScoreMode() {
-        int stored = preferences.getInt(PREF_SCORE_MODE, ScoreMode.ATTEMPT_TODAY.ordinal());
+        int stored = appSettings.getScoreMode(preferences.getInt(PREF_SCORE_MODE, ScoreMode.ATTEMPT_TODAY.ordinal()));
         ScoreMode[] values = ScoreMode.values();
         if (stored < 0 || stored >= values.length) return ScoreMode.ATTEMPT_TODAY;
         return values[stored];
@@ -232,6 +248,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 break;
         }
         preferences.edit().putInt(PREF_SCORE_MODE, scoreMode.ordinal()).apply();
+        appSettings.setScoreMode(scoreMode.ordinal());
         refreshScore();
     }
 
@@ -245,10 +262,10 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         if (overlayView != null) overlayView.beginAutoBarSearch();
         if (stateText != null) {
-            stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+            stateText.setText(getString(R.string.show_body_and_hang));
         }
         if (debugText != null) debugText.setText("");
-        speakAdvice("Возьмитесь за перекладину и спокойно повисните");
+        speakAdvice(getString(R.string.tts_hang));
     }
 
     private void startManualCalibration() {
@@ -261,9 +278,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         overlayView.setBarYNormalized(null, false);
         overlayView.beginBarSelection();
-        stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
+        stateText.setText(getString(R.string.touch_bar));
         debugText.setText("");
-        speakAdvice("Коснитесь перекладины на изображении");
+        speakAdvice(getString(R.string.tts_touch_bar));
     }
 
     private void startCamera() {
@@ -311,36 +328,36 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             overlayView.setResult(result, inputWidth, inputHeight);
 
             if (editingAttempt) {
-                stateText.setText("ИСПРАВЬТЕ СЧЁТ ПОПЫТКИ");
+                stateText.setText(getString(R.string.edit_score));
                 return;
             }
 
             if (autoReadyNow && autoObservation != null) {
                 overlayView.setBarYNormalized(autoObservation.normalizedY, true);
                 resetAdviceSession();
-                stateText.setText("ПЕРЕКЛАДИНА НАЙДЕНА ✓");
-                speakAdvice("Перекладина найдена");
+                stateText.setText(getString(R.string.bar_found));
+                speakAdvice(getString(R.string.tts_bar_found));
                 return;
             }
 
             if (!detector.isCalibrated()) {
                 if (manualSelectionMode) {
-                    stateText.setText("КОСНИТЕСЬ ПЕРЕКЛАДИНЫ");
+                    stateText.setText(getString(R.string.touch_bar));
                     return;
                 }
 
                 if (autoObservation != null && autoObservation.candidateFound) {
-                    stateText.setText(String.format(Locale.US, "НЕ ДВИГАЙТЕСЬ • ПОИСК %d/%d",
+                    stateText.setText(getString(R.string.stay_still_search,
                             Math.min(autoObservation.stableSamples, autoBarDetector.getRequiredSamples()),
                             autoBarDetector.getRequiredSamples()));
                 } else {
-                    stateText.setText("ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ\nВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ");
+                    stateText.setText(getString(R.string.show_body_and_hang));
                 }
                 return;
             }
 
             if (points == null) {
-                stateText.setText("ВСТАНЬТЕ ПОЛНОСТЬЮ В КАДР");
+                stateText.setText(getString(R.string.stand_in_frame));
                 return;
             }
 
@@ -446,7 +463,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         switch (scoreMode) {
             case TODAY:
-                scoreModeText.setText("СЕГОДНЯ  ↻");
+                scoreModeText.setText(getString(R.string.today));
                 scoreText.setTextSize(49f);
                 scoreText.setTextColor(Color.WHITE);
                 scoreText.setText(Integer.toString(today));
@@ -454,7 +471,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 break;
 
             case ALL_TIME:
-                scoreModeText.setText("ЗА ВСЁ ВРЕМЯ  ↻");
+                scoreModeText.setText(getString(R.string.all_time));
                 scoreText.setTextSize(49f);
                 scoreText.setTextColor(Color.WHITE);
                 scoreText.setText(Integer.toString(allTime));
@@ -462,7 +479,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 break;
 
             default:
-                scoreModeText.setText("ПОПЫТКА / СЕГОДНЯ  ↻");
+                scoreModeText.setText(getString(R.string.attempt_today));
                 scoreText.setTextSize(44f);
                 editAttemptButton.setVisibility(View.VISIBLE);
                 setAttemptTodayScore(current, today);
@@ -495,6 +512,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         if (scoreMode != ScoreMode.ATTEMPT_TODAY) {
             scoreMode = ScoreMode.ATTEMPT_TODAY;
             preferences.edit().putInt(PREF_SCORE_MODE, scoreMode.ordinal()).apply();
+            appSettings.setScoreMode(scoreMode.ordinal());
         }
 
         repAnimationText.animate().cancel();
@@ -507,8 +525,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         editAttemptButton.setVisibility(View.GONE);
         editControls.setVisibility(View.VISIBLE);
         mainControls.setVisibility(View.GONE);
-        scoreModeText.setText("ИСПРАВЛЕНИЕ ПОПЫТКИ");
-        stateText.setText("ИСПРАВЬТЕ СЧЁТ ПОПЫТКИ");
+        scoreModeText.setText(getString(R.string.edit_score));
+        stateText.setText(getString(R.string.edit_score));
         renderEditDraft();
     }
 
@@ -541,7 +559,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         editDraftReps = 0;
 
         refreshScore();
-        stateText.setText(save ? "СЧЁТ ИСПРАВЛЕН ✓" : "ИЗМЕНЕНИЯ ОТМЕНЕНЫ");
+        stateText.setText(save ? getString(R.string.score_fixed) : getString(R.string.changes_cancelled));
     }
 
     private void ensureDayBoundary() {
@@ -627,12 +645,12 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 countSpeechEnabled = false;
                 adviceSpeechEnabled = false;
                 updateTtsButtons();
-                Toast.makeText(this, "TTS недоступен на этом устройстве", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.tts_unavailable, Toast.LENGTH_LONG).show();
                 return;
             }
 
             ttsReady = true;
-            int languageResult = tts.setLanguage(new Locale("ru", "RU"));
+            int languageResult = tts.setLanguage(LocaleController.ttsLocale(this));
             if (languageResult == TextToSpeech.LANG_MISSING_DATA
                     || languageResult == TextToSpeech.LANG_NOT_SUPPORTED) {
                 tts.setLanguage(Locale.getDefault());
@@ -643,9 +661,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
     private void updateTtsButtons() {
         updateTtsButton(countTtsButton, countSpeechEnabled,
-                "Озвучка счёта включена", "Озвучка счёта выключена");
+                getString(R.string.count_tts_on), getString(R.string.count_tts_off));
         updateTtsButton(adviceTtsButton, adviceSpeechEnabled,
-                "Голосовые рекомендации включены", "Голосовые рекомендации выключены");
+                getString(R.string.coach_tts_on), getString(R.string.coach_tts_off));
     }
 
     private void updateTtsButton(ImageButton button, boolean enabled,
@@ -701,7 +719,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         if (r.state == PullupDetector.State.DOWN && !readyAdviceSpoken
                 && now - detectorStateEnteredAtMs > 250L) {
-            if (speakAdvice("Можно начинать")) readyAdviceSpoken = true;
+            if (speakAdvice(getString(R.string.tts_can_start))) readyAdviceSpoken = true;
             return;
         }
 
@@ -709,7 +727,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 && !waitingAdviceSpoken
                 && avgAngle < 150.0
                 && now - detectorStateEnteredAtMs > 1800L) {
-            if (speakAdvice("Опуститесь ниже и распрямите руки")) {
+            if (speakAdvice(getString(R.string.tts_go_lower_straight))) {
                 waitingAdviceSpoken = true;
             }
             return;
@@ -718,7 +736,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         if (r.state == PullupDetector.State.GOING_DOWN
                 && !goingDownAdviceSpoken
                 && now - detectorStateEnteredAtMs > 1800L) {
-            if (speakAdvice("Опуститесь ниже")) {
+            if (speakAdvice(getString(R.string.tts_go_lower))) {
                 goingDownAdviceSpoken = true;
             }
             return;
@@ -728,21 +746,21 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 && !goingUpAdviceSpoken
                 && avgAngle < 120.0
                 && now - detectorStateEnteredAtMs > 2500L) {
-            if (speakAdvice("Поднимитесь выше")) {
+            if (speakAdvice(getString(R.string.tts_go_higher))) {
                 goingUpAdviceSpoken = true;
             }
         }
     }
 
-    private static String stateName(PullupDetector.Result r) {
-        if (!r.calibrated) return "КАЛИБРОВКА";
-        if (!r.poseReliable) return "ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ";
+    private String stateName(PullupDetector.Result r) {
+        if (!r.calibrated) return getString(R.string.calibration);
+        if (!r.poseReliable) return getString(R.string.show_body_and_hang);
         switch (r.state) {
-            case DOWN: return "МОЖНО НАЧИНАТЬ";
-            case GOING_UP: return "ВВЕРХ ↑";
-            case UP: return r.countedNow ? "ЗАСЧИТАНО ✓" : "ВВЕРХУ";
-            case GOING_DOWN: return "ОПУСТИТЕСЬ НИЖЕ ↓";
-            default: return "РАСПРЯМИТЕ РУКИ";
+            case DOWN: return getString(R.string.can_start);
+            case GOING_UP: return getString(R.string.going_up);
+            case UP: return r.countedNow ? getString(R.string.counted) : getString(R.string.at_top);
+            case GOING_DOWN: return getString(R.string.go_lower);
+            default: return getString(R.string.straighten_arms);
         }
     }
 
@@ -752,8 +770,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private void showError(String message) {
-        stateText.setText("ОШИБКА");
-        debugText.setText(message == null ? "Неизвестная ошибка" : message);
+        stateText.setText(R.string.error);
+        debugText.setText(message == null ? getString(R.string.unknown_error) : message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
@@ -764,7 +782,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startCamera();
         } else {
-            showError("Нужно разрешение на камеру");
+            showError(getString(R.string.camera_permission_required));
         }
     }
 
@@ -798,6 +816,15 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     @Override
     protected void onResume() {
         super.onResume();
+        if (appSettings != null) {
+            String language = appSettings.getLanguage();
+            String theme = appSettings.getTheme();
+            if (!language.equals(activeLanguage) || !theme.equals(activeTheme)) {
+                recreate();
+                return;
+            }
+            detector.applySettings(appSettings);
+        }
         ensureDayBoundary();
         refreshScore();
         if (poseEngine != null && cameraController == null

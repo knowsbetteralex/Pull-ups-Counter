@@ -12,7 +12,7 @@
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="Камера"
+        android:contentDescription="@string/camera"
         android:scaleType="centerCrop" />
 
     <com.alexzab.pullupcounter.OverlayView
@@ -53,7 +53,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="2dp"
-                android:text="ПОПЫТКА / СЕГОДНЯ ↻"
+                android:text="@string/attempt_today"
                 android:textColor="#AAFFFFFF"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -69,7 +69,7 @@
                     android:layout_gravity="start|center_vertical"
                     android:layout_marginStart="4dp"
                     android:background="@drawable/bg_action_chip"
-                    android:contentDescription="Открыть историю"
+                    android:contentDescription="@string/open_history"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_history" />
@@ -94,7 +94,7 @@
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="4dp"
                     android:background="@drawable/bg_action_chip"
-                    android:contentDescription="Исправить текущую попытку"
+                    android:contentDescription="@string/edit_attempt"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_edit" />
@@ -151,7 +151,7 @@
                     android:focusable="true"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
-                    android:text="ОК"
+                    android:text="@string/ok"
                     android:textColor="#37E6B4"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -167,7 +167,7 @@
                     android:focusable="true"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
-                    android:text="Отмена"
+                    android:text="@string/cancel"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -191,7 +191,7 @@
                 android:focusable="true"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:text="Авто"
+                android:text="@string/auto"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
@@ -207,7 +207,7 @@
                 android:focusable="true"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:text="Линия"
+                android:text="@string/bar_line"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
@@ -223,10 +223,21 @@
                 android:focusable="true"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:text="Новая"
+                android:text="@string/new_attempt"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
+
+            <ImageButton
+                android:id="@+id/settings_button"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_action_chip"
+                android:contentDescription="@string/settings"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_settings" />
 
             <ImageButton
                 android:id="@+id/count_tts_button"
@@ -234,7 +245,7 @@
                 android:layout_height="38dp"
                 android:layout_marginStart="6dp"
                 android:background="@drawable/bg_action_chip"
-                android:contentDescription="Озвучка счёта выключена"
+                android:contentDescription="@string/count_tts_off"
                 android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_tts_count" />
@@ -245,7 +256,7 @@
                 android:layout_height="38dp"
                 android:layout_marginStart="6dp"
                 android:background="@drawable/bg_action_chip"
-                android:contentDescription="Голосовые рекомендации выключены"
+                android:contentDescription="@string/coach_tts_off"
                 android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_tts_coach" />
@@ -303,7 +314,7 @@
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="4"
-            android:text="ПОКАЖИТЕ В КАДРЕ КОРПУС И НОГИ&#10;ВОЗЬМИТЕСЬ ЗА ПЕРЕКЛАДИНУ И ПОВИСНИТЕ"
+            android:text="@string/show_body_and_hang"
             android:textColor="#FFFFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />

@@ -45,10 +45,11 @@ public final class PullupDetector {
     private static final int LEFT_KNEE = 25;
     private static final int RIGHT_KNEE = 26;
 
-    private static final double DOWN_ANGLE = 150.0;
-    private static final double LEAVE_DOWN_ANGLE = 142.0;
-    private static final double UP_ANGLE = 85.0;
-    private static final double LEAVE_UP_ANGLE = 105.0;
+    private double downAngle = AppSettings.DEFAULT_DOWN_ANGLE;
+    private double leaveDownAngle = AppSettings.DEFAULT_DOWN_ANGLE - 8.0;
+    private double upAngle = AppSettings.DEFAULT_UP_ANGLE;
+    private double leaveUpAngle = AppSettings.DEFAULT_UP_ANGLE + 20.0;
+    private long topHoldMs = AppSettings.DEFAULT_TOP_HOLD_MS;
     private static final double MOUTH_BAR_MARGIN = 0.015;
     private static final double MIN_VISIBILITY = 0.45;
     private static final double LOWER_BODY_VISIBILITY = 0.35;
@@ -61,10 +62,20 @@ public final class PullupDetector {
     private State state = State.WAITING;
     private int downStable = 0;
     private int upStable = 0;
+    private long topCandidateSinceMs = 0L;
     private boolean hasEma = false;
     private double emaLeftAngle;
     private double emaRightAngle;
     private Double calibratedBarY = null;
+
+    public void applySettings(AppSettings settings) {
+        downAngle = settings.getDownAngle();
+        leaveDownAngle = downAngle - 8.0;
+        upAngle = settings.getUpAngle();
+        leaveUpAngle = upAngle + 20.0;
+        topHoldMs = settings.getTopHoldMs();
+        resetMotionState();
+    }
 
     public void setCalibratedBarY(double normalizedY) {
         calibratedBarY = Math.max(0.0, Math.min(1.0, normalizedY));
@@ -101,6 +112,7 @@ public final class PullupDetector {
         state = State.WAITING;
         downStable = 0;
         upStable = 0;
+        topCandidateSinceMs = 0L;
         hasEma = false;
     }
 
@@ -134,9 +146,9 @@ public final class PullupDetector {
 
         double avgAngle = (emaLeftAngle + emaRightAngle) * 0.5;
         double shoulderY = (p.get(LEFT_SHOULDER).y() + p.get(RIGHT_SHOULDER).y()) * 0.5;
-        boolean armsExtended = avgAngle > DOWN_ANGLE && shoulderY > barY + 0.12;
+        boolean armsExtended = avgAngle > downAngle && shoulderY > barY + 0.12;
         boolean aboveBar = mouthY < barY + MOUTH_BAR_MARGIN;
-        boolean topReached = avgAngle < UP_ANGLE && aboveBar;
+        boolean topReached = avgAngle < upAngle && aboveBar;
         boolean countedNow = false;
 
         switch (state) {
@@ -151,26 +163,30 @@ public final class PullupDetector {
                 }
                 break;
             case DOWN:
-                if (avgAngle < LEAVE_DOWN_ANGLE) {
+                if (avgAngle < leaveDownAngle) {
                     state = State.GOING_UP;
                     upStable = 0;
                 }
                 break;
             case GOING_UP:
                 if (topReached) {
-                    if (++upStable >= STABLE_FRAMES) {
+                    long now = android.os.SystemClock.uptimeMillis();
+                    if (topCandidateSinceMs == 0L) topCandidateSinceMs = now;
+                    if (now - topCandidateSinceMs >= topHoldMs) {
                         state = State.UP;
                         count++;
                         countedNow = true;
                         upStable = 0;
+                        topCandidateSinceMs = 0L;
                     }
                 } else {
                     upStable = 0;
+                    topCandidateSinceMs = 0L;
                     if (armsExtended) state = State.DOWN;
                 }
                 break;
             case UP:
-                if (avgAngle > LEAVE_UP_ANGLE || !aboveBar) {
+                if (avgAngle > leaveUpAngle || !aboveBar) {
                     state = State.GOING_DOWN;
                 }
                 break;

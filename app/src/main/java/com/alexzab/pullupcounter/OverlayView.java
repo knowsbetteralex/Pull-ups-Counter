@@ -203,7 +203,7 @@ public final class OverlayView extends View {
             canvas.drawRect(0f, boxTop, getWidth(), boxBottom, guidePaint);
             float baseline = (boxTop + boxBottom) * 0.5f
                     - (guideTextPaint.ascent() + guideTextPaint.descent()) * 0.5f;
-            canvas.drawText("ПРОВЕДИТЕ ЛИНИЮ ПО ПЕРЕКЛАДИНЕ", getWidth() * 0.5f,
+            canvas.drawText(getContext().getString(R.string.draw_bar_line), getWidth() * 0.5f,
                     baseline, guideTextPaint);
         }
     }

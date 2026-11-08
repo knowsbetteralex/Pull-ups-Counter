@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#071016"
+    android:background="?android:colorBackground"
     android:orientation="vertical"
     android:paddingStart="16dp"
     android:paddingTop="18dp"
@@ -23,7 +23,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="←"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:textColorPrimary"
             android:textSize="24sp" />
 
         <LinearLayout
@@ -37,8 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:text="ИСТОРИЯ"
-                android:textColor="#FFFFFF"
+                android:text="@string/history_title"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -46,8 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Все сохранённые попытки по дням"
-                android:textColor="#99FFFFFF"
+                android:text="@string/history_subtitle"
+                android:textColor="?android:textColorSecondary"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
@@ -68,8 +68,8 @@
             android:focusable="true"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:text="Сохранить копию"
-            android:textColor="#FFFFFF"
+            android:text="@string/save_backup"
+            android:textColor="?android:textColorPrimary"
             android:textSize="13sp" />
 
         <TextView
@@ -83,7 +83,7 @@
             android:focusable="true"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:text="Восстановить"
+            android:text="@string/restore_backup"
             android:textColor="#37E6B4"
             android:textSize="13sp" />
     </LinearLayout>
@@ -93,8 +93,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Файл можно сохранить локально или в облачный диск через системный выбор файлов"
-        android:textColor="#77FFFFFF"
+        android:text="@string/backup_file_hint"
+        android:textColor="?android:textColorSecondary"
         android:textSize="11sp" />
 
     <TextView
@@ -105,7 +105,7 @@
         android:gravity="center"
         android:text="История пока пуста
 Сделайте первое подтягивание"
-        android:textColor="#88FFFFFF"
+        android:textColor="?android:textColorSecondary"
         android:textSize="16sp"
         android:visibility="gone" />
 

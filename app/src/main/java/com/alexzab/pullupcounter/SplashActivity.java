@@ -1,12 +1,18 @@
 package com.alexzab.pullupcounter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 public final class SplashActivity extends Activity {
     private static final long SPLASH_MS = 720L;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleController.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
