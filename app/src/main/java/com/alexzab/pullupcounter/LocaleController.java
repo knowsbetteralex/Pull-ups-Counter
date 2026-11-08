@@ -33,7 +33,7 @@ public final class LocaleController {
         if ("es".equals(code)) return Locale.forLanguageTag("es");
         if ("it".equals(code)) return Locale.ITALIAN;
         if ("pt".equals(code)) return Locale.forLanguageTag("pt");
-        if ("zh-Hans".equals(code)) return Locale.SIMPLIFIED_CHINESE;
+        if ("zh-CN".equals(code)) return Locale.SIMPLIFIED_CHINESE;
         if ("ko".equals(code)) return Locale.KOREAN;
         return Locale.getDefault();
     }
