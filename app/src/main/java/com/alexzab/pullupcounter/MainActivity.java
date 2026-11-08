@@ -66,6 +66,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     private StatsStore statsStore;
     private AppSettings appSettings;
     private SharedPreferences preferences;
+    private String activeLanguage;
+    private String activeTheme;
     private final PullupDetector detector = new PullupDetector();
     private final AutoBarDetector autoBarDetector = new AutoBarDetector();
 
@@ -111,6 +113,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
         statsStore = new StatsStore(this);
         appSettings = new AppSettings(this);
+        activeLanguage = appSettings.getLanguage();
+        activeTheme = appSettings.getTheme();
         detector.applySettings(appSettings);
         preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         scoreMode = loadScoreMode();
@@ -519,7 +523,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         editAttemptButton.setVisibility(View.GONE);
         editControls.setVisibility(View.VISIBLE);
         mainControls.setVisibility(View.GONE);
-        scoreModeText.setText("ИСПРАВЛЕНИЕ ПОПЫТКИ");
+        scoreModeText.setText(getString(R.string.edit_score));
         stateText.setText(getString(R.string.edit_score));
         renderEditDraft();
     }
@@ -655,9 +659,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
     private void updateTtsButtons() {
         updateTtsButton(countTtsButton, countSpeechEnabled,
-                "Озвучка счёта включена", "Озвучка счёта выключена");
+                getString(R.string.count_tts_on), getString(R.string.count_tts_off));
         updateTtsButton(adviceTtsButton, adviceSpeechEnabled,
-                "Голосовые рекомендации включены", "Голосовые рекомендации выключены");
+                getString(R.string.coach_tts_on), getString(R.string.coach_tts_off));
     }
 
     private void updateTtsButton(ImageButton button, boolean enabled,
@@ -810,7 +814,15 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     @Override
     protected void onResume() {
         super.onResume();
-        if (appSettings != null) detector.applySettings(appSettings);
+        if (appSettings != null) {
+            String language = appSettings.getLanguage();
+            String theme = appSettings.getTheme();
+            if (!language.equals(activeLanguage) || !theme.equals(activeTheme)) {
+                recreate();
+                return;
+            }
+            detector.applySettings(appSettings);
+        }
         ensureDayBoundary();
         refreshScore();
         if (poseEngine != null && cameraController == null
