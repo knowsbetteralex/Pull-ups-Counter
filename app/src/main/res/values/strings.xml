@@ -81,4 +81,13 @@ Complete your first pull-up</string>
 <string name="day_total">%1$d today</string>
 <string name="reps_count">%1$d reps</string>
 <string name="splash_subtitle">Every rep counts</string>
+
+<string name="draw_bar_line">DRAW THE LINE ALONG THE BAR</string>
+<string name="calibration">CALIBRATION</string>
+<string name="error">ERROR</string>
+<string name="unknown_error">Unknown error</string>
+<string name="camera_permission_required">Camera permission is required</string>
+<string name="mediapipe_error">MediaPipe failed to start: %1$s</string>
+<string name="tts_unavailable">TTS is not available on this device</string>
+<string name="backup_file_hint">The file can be saved locally or to cloud storage through the system file picker</string>
 </resources>
