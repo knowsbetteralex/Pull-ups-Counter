@@ -156,7 +156,11 @@ public final class SettingsActivity extends Activity {
 
     private void addInfo() {
         section(getString(R.string.about));
-        root.addView(muted("Pull-Up Counter v" + BuildConfig.VERSION_NAME));
+        String versionName = "?";
+        try {
+            versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (Exception ignored) {}
+        root.addView(muted("Pull-Up Counter v" + versionName));
     }
 
     private void addIntSetting(String title, String suffix, int min, int max, int current, int def,
@@ -297,7 +301,7 @@ public final class SettingsActivity extends Activity {
 
     private interface IntSetter { void set(int value); }
 
-    private abstract static class SimpleItemSelectedListener implements android.widget.AdapterView.OnItemSelectedListener {
+    private static class SimpleItemSelectedListener implements android.widget.AdapterView.OnItemSelectedListener {
         private final java.util.function.IntConsumer consumer;
         SimpleItemSelectedListener(java.util.function.IntConsumer consumer){this.consumer=consumer;}
         public void onItemSelected(android.widget.AdapterView<?> p,View v,int pos,long id){consumer.accept(pos);}
