@@ -11,4 +11,13 @@ SATVERIET STIENI UN PAKARIETIES</string><string name="touch_bar">PIESKARIETIES S
 <string name="settings_applied_restart">Valoda tiks lietota pēc ekrāna atkārtotas atvēršanas</string><string name="backup_saved">Rezerves kopija saglabāta</string><string name="backup_error_save">Neizdevās saglabāt kopiju: %1$s</string><string name="backup_error_read">Neizdevās nolasīt kopiju: %1$s</string><string name="restore_title">Atjaunot datus</string><string name="restore_message">Apvienot kopiju ar pašreizējo vēsturi vai aizstāt vēsturi?</string><string name="merge">Apvienot</string><string name="replace">Aizstāt</string><string name="cancel">Atcelt</string><string name="ok">Labi</string>
 <string name="history_title">VĒSTURE</string><string name="history_subtitle">Visi saglabātie piegājieni pa dienām</string><string name="history_empty">Vēsture ir tukša
 Veiciet pirmo pievilkšanos</string><string name="day_total">%1$d šodien</string><string name="reps_count">%1$d atk.</string><string name="splash_subtitle">Katrs atkārtojums ir svarīgs</string>
+
+<string name="draw_bar_line">NOVELCIET LĪNIJU GAR STIENI</string>
+<string name="calibration">KALIBRĒŠANA</string>
+<string name="error">KĻŪDA</string>
+<string name="unknown_error">Nezināma kļūda</string>
+<string name="camera_permission_required">Nepieciešama kameras atļauja</string>
+<string name="mediapipe_error">MediaPipe neizdevās palaist: %1$s</string>
+<string name="tts_unavailable">TTS šajā ierīcē nav pieejams</string>
+<string name="backup_file_hint">Failu var saglabāt lokāli vai mākoņkrātuvē, izmantojot sistēmas failu izvēli</string>
 </resources>
