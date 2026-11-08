@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Файл можно сохранить локально или в облачный диск через системный выбор файлов"
+        android:text="@string/backup_file_hint"
         android:textColor="#77FFFFFF"
         android:textSize="11sp" />
 
