@@ -217,7 +217,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         try {
             poseEngine = new PoseEngine(this, this);
         } catch (RuntimeException e) {
-            showError("MediaPipe не запустился: " + e.getMessage());
+            showError(getString(R.string.mediapipe_error, e.getMessage()));
             return;
         }
 
@@ -643,7 +643,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 countSpeechEnabled = false;
                 adviceSpeechEnabled = false;
                 updateTtsButtons();
-                Toast.makeText(this, "TTS недоступен на этом устройстве", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.tts_unavailable, Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -751,7 +751,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private String stateName(PullupDetector.Result r) {
-        if (!r.calibrated) return "КАЛИБРОВКА";
+        if (!r.calibrated) return getString(R.string.calibration);
         if (!r.poseReliable) return getString(R.string.show_body_and_hang);
         switch (r.state) {
             case DOWN: return getString(R.string.can_start);
@@ -768,8 +768,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private void showError(String message) {
-        stateText.setText("ОШИБКА");
-        debugText.setText(message == null ? "Неизвестная ошибка" : message);
+        stateText.setText(R.string.error);
+        debugText.setText(message == null ? getString(R.string.unknown_error) : message);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
@@ -780,7 +780,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startCamera();
         } else {
-            showError("Нужно разрешение на камеру");
+            showError(getString(R.string.camera_permission_required));
         }
     }
 
