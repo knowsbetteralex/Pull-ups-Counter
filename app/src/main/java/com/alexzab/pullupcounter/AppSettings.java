@@ -24,6 +24,7 @@ public final class AppSettings {
     private static final String KEY_DOWN_ANGLE = "down_angle";
     private static final String KEY_UP_ANGLE = "up_angle";
     private static final String KEY_TOP_HOLD_MS = "top_hold_ms";
+    private static final String KEY_SCORE_MODE = "score_mode";
 
     private final SharedPreferences prefs;
 
@@ -43,6 +44,9 @@ public final class AppSettings {
     public int getUpAngle() { return clamp(prefs.getInt(KEY_UP_ANGLE, DEFAULT_UP_ANGLE), MIN_UP_ANGLE, MAX_UP_ANGLE); }
     public void setUpAngle(int value) { prefs.edit().putInt(KEY_UP_ANGLE, clamp(value, MIN_UP_ANGLE, MAX_UP_ANGLE)).apply(); }
 
+    public int getScoreMode(int fallback) { return prefs.getInt(KEY_SCORE_MODE, fallback); }
+    public void setScoreMode(int value) { prefs.edit().putInt(KEY_SCORE_MODE, value).apply(); }
+
     public int getTopHoldMs() { return clamp(prefs.getInt(KEY_TOP_HOLD_MS, DEFAULT_TOP_HOLD_MS), MIN_TOP_HOLD_MS, MAX_TOP_HOLD_MS); }
     public void setTopHoldMs(int value) { prefs.edit().putInt(KEY_TOP_HOLD_MS, clamp(value, MIN_TOP_HOLD_MS, MAX_TOP_HOLD_MS)).apply(); }
 
@@ -61,6 +65,7 @@ public final class AppSettings {
         o.put("downAngle", getDownAngle());
         o.put("upAngle", getUpAngle());
         o.put("topHoldMs", getTopHoldMs());
+        o.put("scoreMode", getScoreMode(0));
         return o;
     }
 
@@ -71,6 +76,7 @@ public final class AppSettings {
         if (o.has("downAngle")) setDownAngle(o.optInt("downAngle", DEFAULT_DOWN_ANGLE));
         if (o.has("upAngle")) setUpAngle(o.optInt("upAngle", DEFAULT_UP_ANGLE));
         if (o.has("topHoldMs")) setTopHoldMs(o.optInt("topHoldMs", DEFAULT_TOP_HOLD_MS));
+        if (o.has("scoreMode")) setScoreMode(Math.max(0, Math.min(2, o.optInt("scoreMode", 0))));
     }
 
     private static int clamp(int v, int min, int max) { return Math.max(min, Math.min(max, v)); }
