@@ -229,7 +229,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
     }
 
     private ScoreMode loadScoreMode() {
-        int stored = preferences.getInt(PREF_SCORE_MODE, ScoreMode.ATTEMPT_TODAY.ordinal());
+        int stored = appSettings.getScoreMode(preferences.getInt(PREF_SCORE_MODE, ScoreMode.ATTEMPT_TODAY.ordinal()));
         ScoreMode[] values = ScoreMode.values();
         if (stored < 0 || stored >= values.length) return ScoreMode.ATTEMPT_TODAY;
         return values[stored];
@@ -248,6 +248,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 break;
         }
         preferences.edit().putInt(PREF_SCORE_MODE, scoreMode.ordinal()).apply();
+        appSettings.setScoreMode(scoreMode.ordinal());
         refreshScore();
     }
 
@@ -511,6 +512,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         if (scoreMode != ScoreMode.ATTEMPT_TODAY) {
             scoreMode = ScoreMode.ATTEMPT_TODAY;
             preferences.edit().putInt(PREF_SCORE_MODE, scoreMode.ordinal()).apply();
+            appSettings.setScoreMode(scoreMode.ordinal());
         }
 
         repAnimationText.animate().cancel();
