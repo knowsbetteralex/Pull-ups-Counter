@@ -101,7 +101,7 @@ public final class SettingsActivity extends Activity {
                 getString(R.string.language_zh),
                 getString(R.string.language_ko)
         };
-        String[] values = {"system","ru","en","lv","de","fr","ja","ar","hi","es","it","pt","zh-Hans","ko"};
+        String[] values = {"system","ru","en","lv","de","fr","ja","ar","hi","es","it","pt","zh-CN","ko"};
         language.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, labels));
         language.setSelection(indexOf(values, settings.getLanguage()));
         final boolean[] languageReady={false};
