@@ -212,7 +212,7 @@ public final class HistoryActivity extends Activity {
                     LinearLayout.LayoutParams.WRAP_CONTENT));
 
             TextView date = text(dateFormat.format(new Date(day.dayStart)).toUpperCase(Locale.getDefault()),
-                    16, Color.WHITE, true);
+                    16, primaryColor(), true);
             top.addView(date, new LinearLayout.LayoutParams(
                     0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
@@ -230,12 +230,12 @@ public final class HistoryActivity extends Activity {
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
                 TextView time = text(timeFormat.format(new Date(attempt.startedAt)),
-                        14, Color.argb(180, 255, 255, 255), false);
+                        14, secondaryColor(), false);
                 row.addView(time, new LinearLayout.LayoutParams(
                         dp(62), LinearLayout.LayoutParams.WRAP_CONTENT));
 
                 String repsText = getString(R.string.reps_count, attempt.reps);
-                TextView reps = text(repsText, 15, Color.WHITE, false);
+                TextView reps = text(repsText, 15, primaryColor(), false);
                 row.addView(reps, new LinearLayout.LayoutParams(
                         0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
             }
@@ -273,6 +273,23 @@ public final class HistoryActivity extends Activity {
         if (mod10 == 1) return "повторение";
         if (mod10 >= 2 && mod10 <= 4) return "повторения";
         return "повторений";
+    }
+
+    private int primaryColor() {
+        return isLight() ? Color.rgb(20, 28, 32) : Color.WHITE;
+    }
+
+    private int secondaryColor() {
+        return isLight() ? Color.rgb(92, 104, 110) : Color.argb(180, 255, 255, 255);
+    }
+
+    private boolean isLight() {
+        String theme = new AppSettings(this).getTheme();
+        if ("light".equals(theme)) return true;
+        if ("dark".equals(theme)) return false;
+        int mode = getResources().getConfiguration().uiMode
+                & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return mode != android.content.res.Configuration.UI_MODE_NIGHT_YES;
     }
 
     private int dp(int value) {
