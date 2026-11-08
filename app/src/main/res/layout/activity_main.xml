@@ -151,7 +151,7 @@
                     android:focusable="true"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
-                    android:text="ОК"
+                    android:text="@string/ok"
                     android:textColor="#37E6B4"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -167,7 +167,7 @@
                     android:focusable="true"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
-                    android:text="Отмена"
+                    android:text="@string/cancel"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
             </LinearLayout>
