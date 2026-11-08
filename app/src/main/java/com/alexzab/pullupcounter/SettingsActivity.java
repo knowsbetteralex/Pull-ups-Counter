@@ -93,8 +93,10 @@ public final class SettingsActivity extends Activity {
         final boolean[] languageReady={false};
         language.setOnItemSelectedListener(new SimpleItemSelectedListener(pos -> {
             if (!languageReady[0]) { languageReady[0]=true; return; }
-            settings.setLanguage(values[pos]);
-            recreate();
+            String selected = values[pos];
+            if (selected.equals(settings.getLanguage())) return;
+            settings.setLanguage(selected);
+            language.post(this::recreate);
         }));
         root.addView(language, match());
 
@@ -109,8 +111,10 @@ public final class SettingsActivity extends Activity {
         final boolean[] themeReady={false};
         theme.setOnItemSelectedListener(new SimpleItemSelectedListener(pos -> {
             if (!themeReady[0]) { themeReady[0]=true; return; }
-            settings.setTheme(themeValues[pos]);
-            recreate();
+            String selected = themeValues[pos];
+            if (selected.equals(settings.getTheme())) return;
+            settings.setTheme(selected);
+            theme.post(this::recreate);
         }));
         root.addView(theme, match());
 
