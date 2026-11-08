@@ -25,6 +25,16 @@ public final class LocaleController {
         if ("ru".equals(code)) return new Locale("ru", "RU");
         if ("lv".equals(code)) return new Locale("lv", "LV");
         if ("en".equals(code)) return Locale.ENGLISH;
+        if ("de".equals(code)) return Locale.GERMAN;
+        if ("fr".equals(code)) return Locale.FRENCH;
+        if ("ja".equals(code)) return Locale.JAPANESE;
+        if ("ar".equals(code)) return Locale.forLanguageTag("ar");
+        if ("hi".equals(code)) return Locale.forLanguageTag("hi-IN");
+        if ("es".equals(code)) return Locale.forLanguageTag("es");
+        if ("it".equals(code)) return Locale.ITALIAN;
+        if ("pt".equals(code)) return Locale.forLanguageTag("pt");
+        if ("zh-CN".equals(code)) return Locale.SIMPLIFIED_CHINESE;
+        if ("ko".equals(code)) return Locale.KOREAN;
         return Locale.getDefault();
     }
 }

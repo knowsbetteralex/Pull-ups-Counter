@@ -85,9 +85,23 @@ public final class SettingsActivity extends Activity {
         TextView langLabel = label(getString(R.string.language), 15, false);
         root.addView(langLabel);
         Spinner language = new Spinner(this);
-        String[] labels = {getString(R.string.language_system), getString(R.string.language_ru),
-                getString(R.string.language_en), getString(R.string.language_lv)};
-        String[] values = {"system","ru","en","lv"};
+        String[] labels = {
+                getString(R.string.language_system),
+                getString(R.string.language_ru),
+                getString(R.string.language_en),
+                getString(R.string.language_lv),
+                getString(R.string.language_de),
+                getString(R.string.language_fr),
+                getString(R.string.language_ja),
+                getString(R.string.language_ar),
+                getString(R.string.language_hi),
+                getString(R.string.language_es),
+                getString(R.string.language_it),
+                getString(R.string.language_pt),
+                getString(R.string.language_zh),
+                getString(R.string.language_ko)
+        };
+        String[] values = {"system","ru","en","lv","de","fr","ja","ar","hi","es","it","pt","zh-CN","ko"};
         language.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, labels));
         language.setSelection(indexOf(values, settings.getLanguage()));
         final boolean[] languageReady={false};
