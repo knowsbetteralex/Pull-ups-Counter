@@ -62,6 +62,7 @@ public final class SettingsActivity extends Activity {
         addGeneral();
         addParameters();
         addBackup();
+        addHelp();
         addInfo();
     }
 
@@ -170,6 +171,14 @@ public final class SettingsActivity extends Activity {
         LinearLayout.LayoutParams rlp=new LinearLayout.LayoutParams(0,dp(48),1f); rlp.setMargins(dp(8),0,0,0);
         row.addView(restore, rlp);
         root.addView(row);
+    }
+
+    private void addHelp() {
+        section(getString(R.string.help_title));
+        Button help = button(getString(R.string.help_open));
+        help.setOnClickListener(v -> startActivity(new Intent(this, HelpActivity.class)));
+        root.addView(help, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(48)));
     }
 
     private void addInfo() {
