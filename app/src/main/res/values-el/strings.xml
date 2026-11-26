@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Ρυθμίσεις</string>
+<string name="history">Ιστορικό</string>
+<string name="general">Γενικά</string>
+<string name="language">Γλώσσα</string>
+<string name="theme">Θέμα</string>
+<string name="theme_dark">Σκούρο</string>
+<string name="theme_light">Φωτεινό</string>
+<string name="theme_system">Συστήματος</string>
+<string name="language_system">Συστήματος</string>
+<string name="pullup_parameters">Παράμετροι έλξεων</string>
+<string name="down_angle">Γωνία χεριών κάτω</string>
+<string name="up_angle">Γωνία χεριών πάνω</string>
+<string name="top_hold">Κράτημα στην κορυφή</string>
+<string name="reset_default">Επαναφορά προεπιλογής</string>
+<string name="backup">Αντίγραφο ασφαλείας</string>
+<string name="save_backup">Αποθήκευση αντιγράφου</string>
+<string name="restore_backup">Επαναφορά</string>
+<string name="backup_hint">Οι ρυθμίσεις και το ιστορικό αποθηκεύονται μαζί</string>
+<string name="about">Σχετικά</string>
+<string name="keep_screen_on">Διατήρηση οθόνης ενεργής στην προπόνηση</string>
+<string name="screen_on_always">Ενεργό όσο είναι ανοιχτή η οθόνη προπόνησης</string>
+<string name="back">Πίσω</string>
+<string name="auto">Αυτόματο</string>
+<string name="bar_line">Γραμμή</string>
+<string name="new_attempt">Νέα</string>
+<string name="count_tts_on">Φωνή μέτρησης ενεργή</string>
+<string name="count_tts_off">Φωνή μέτρησης ανενεργή</string>
+<string name="coach_tts_on">Φωνητικές οδηγίες ενεργές</string>
+<string name="coach_tts_off">Φωνητικές οδηγίες ανενεργές</string>
+<string name="attempt_today">ΣΕΤ / ΣΗΜΕΡΑ ↻</string>
+<string name="today">ΣΗΜΕΡΑ ↻</string>
+<string name="all_time">ΣΥΝΟΛΟ ↻</string>
+<string name="edit_attempt">Επεξεργασία τρέχοντος σετ</string>
+<string name="open_history">Άνοιγμα ιστορικού</string>
+<string name="camera">Κάμερα</string>
+<string name="show_body_and_hang">ΔΕΙΞΤΕ ΣΩΜΑ ΚΑΙ ΠΟΔΙΑ ΣΤΟ ΚΑΔΡΟ\nΠΙΑΣΤΕ ΤΗ ΜΠΑΡΑ ΚΑΙ ΚΡΕΜΑΣΤΕΙΤΕ</string>
+<string name="touch_bar">ΑΓΓΙΞΤΕ ΤΗ ΜΠΑΡΑ</string>
+<string name="bar_set">Η ΜΠΑΡΑ ΟΡΙΣΤΗΚΕ ✓</string>
+<string name="bar_found">Η ΜΠΑΡΑ ΒΡΕΘΗΚΕ ✓</string>
+<string name="ready">ΕΤΟΙΜΟ</string>
+<string name="stand_in_frame">ΜΠΕΙΤΕ ΟΛΟΚΛΗΡΟΙ ΣΤΟ ΚΑΔΡΟ</string>
+<string name="stay_still_search">ΜΗΝ ΚΙΝΕΙΣΤΕ • ΑΝΑΖΗΤΗΣΗ %1$d/%2$d</string>
+<string name="can_start">ΜΠΟΡΕΙΤΕ ΝΑ ΞΕΚΙΝΗΣΕΤΕ</string>
+<string name="going_up">ΠΑΝΩ ↑</string>
+<string name="counted">ΜΕΤΡΗΘΗΚΕ ✓</string>
+<string name="at_top">ΣΤΗΝ ΚΟΡΥΦΗ</string>
+<string name="go_lower">ΚΑΤΕΒΕΙΤΕ ΧΑΜΗΛΟΤΕΡΑ ↓</string>
+<string name="straighten_arms">ΤΕΝΤΩΣΤΕ ΤΑ ΧΕΡΙΑ</string>
+<string name="edit_score">ΕΠΕΞΕΡΓΑΣΙΑ ΣΕΤ</string>
+<string name="score_fixed">Η ΜΕΤΡΗΣΗ ΔΙΟΡΘΩΘΗΚΕ ✓</string>
+<string name="changes_cancelled">ΟΙ ΑΛΛΑΓΕΣ ΑΚΥΡΩΘΗΚΑΝ</string>
+<string name="tts_bar_set">Η μπάρα ορίστηκε</string>
+<string name="tts_hang">Πιάστε τη μπάρα και μείνετε κρεμασμένοι</string>
+<string name="tts_touch_bar">Αγγίξτε τη μπάρα στην εικόνα</string>
+<string name="tts_bar_found">Η μπάρα βρέθηκε</string>
+<string name="tts_can_start">Μπορείτε να ξεκινήσετε</string>
+<string name="tts_go_lower_straight">Κατεβείτε χαμηλότερα και τεντώστε τα χέρια</string>
+<string name="tts_go_lower">Κατεβείτε χαμηλότερα</string>
+<string name="tts_go_higher">Ανεβείτε ψηλότερα</string>
+<string name="settings_applied_restart">Η γλώσσα εφαρμόζεται μετά το ξανάνοιγμα της οθόνης</string>
+<string name="backup_saved">Το αντίγραφο αποθηκεύτηκε</string>
+<string name="backup_error_save">Δεν ήταν δυνατή η αποθήκευση: %1$s</string>
+<string name="backup_error_read">Δεν ήταν δυνατή η ανάγνωση: %1$s</string>
+<string name="restore_title">Επαναφορά δεδομένων</string>
+<string name="restore_message">Συγχώνευση με το τρέχον ιστορικό ή αντικατάστασή του;</string>
+<string name="merge">Συγχώνευση</string>
+<string name="replace">Αντικατάσταση</string>
+<string name="cancel">Ακύρωση</string>
+<string name="ok">OK</string>
+<string name="history_title">ΙΣΤΟΡΙΚΟ</string>
+<string name="history_subtitle">Όλα τα αποθηκευμένα σετ ανά ημέρα</string>
+<string name="history_empty">Το ιστορικό είναι κενό\nΚάντε την πρώτη έλξη</string>
+<string name="day_total">%1$d σήμερα</string>
+<string name="reps_count">%1$d επαν.</string>
+<string name="splash_subtitle">Κάθε επανάληψη μετράει</string>
+<string name="draw_bar_line">ΣΧΕΔΙΑΣΤΕ ΓΡΑΜΜΗ ΠΑΝΩ ΣΤΗ ΜΠΑΡΑ</string>
+<string name="calibration">ΒΑΘΜΟΝΟΜΗΣΗ</string>
+<string name="error">ΣΦΑΛΜΑ</string>
+<string name="unknown_error">Άγνωστο σφάλμα</string>
+<string name="camera_permission_required">Απαιτείται άδεια κάμερας</string>
+<string name="mediapipe_error">Το MediaPipe δεν ξεκίνησε: %1$s</string>
+<string name="tts_unavailable">Το TTS δεν είναι διαθέσιμο σε αυτή τη συσκευή</string>
+<string name="backup_file_hint">Το αρχείο μπορεί να αποθηκευτεί τοπικά ή στο cloud μέσω του συστήματος</string>
+<string name="help_title">Βοήθεια</string>
+<string name="help_open">Άνοιγμα οδηγιών</string>
+<string name="help_content" formatted="false">## Γρήγορη εκκίνηση
+
+Στερεώστε το τηλέφωνο ώστε η κάμερα να βλέπει κορμό, χέρια και μέρος των ποδιών. Επιλέξτε Αυτόματο ή Γραμμή, κρεμαστείτε με τεντωμένα χέρια, ανεβείτε και επιστρέψτε κάτω.
+
+## Βαθμονόμηση και παύση
+
+Το Αυτόματο βρίσκει τη μπάρα ενώ μένετε ακίνητοι. Η Γραμμή την ορίζει χειροκίνητα. Στην παύση σταματούν αναγνώριση, μέτρηση και TTS· μετά τη συνέχιση γίνεται νέα βαθμονόμηση.
+
+## Μέτρηση
+
+Μία επανάληψη απαιτεί σωστή κάτω θέση, κίνηση πάνω, σωστή πάνω θέση και επιστροφή. Στην πλατιά λαβή εφαρμόζεται αυτόματα μικρή ανοχή γωνίας. Από πίσω μπορεί να χρησιμοποιηθεί η κατακόρυφη κίνηση των ώμων όταν το πρόσωπο δεν είναι αξιόπιστο.
+
+## Χειρισμός και φωνή
+
+Η ένδειξη αλλάζει Σετ/Σήμερα, Σήμερα και Σύνολο. Νέα ξεκινά νέο σετ και το μολύβι διορθώνει το τρέχον. Το ενεργό σετ και οι δύο φωνητικοί διακόπτες διατηρούνται μετά από επανεκκίνηση.
+
+## Ρυθμίσεις και αντίγραφο
+
+Μπορείτε να αλλάξετε γλώσσα, θέμα και παραμέτρους ανίχνευσης. Το JSON αντίγραφο περιέχει ιστορικό και ρυθμίσεις και μπορεί να συγχωνευτεί ή να αντικαταστήσει τα δεδομένα.</string>
+</resources>
