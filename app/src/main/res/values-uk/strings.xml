@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Налаштування</string>
+<string name="history">Історія</string>
+<string name="general">Загальні</string>
+<string name="language">Мова</string>
+<string name="theme">Тема</string>
+<string name="theme_dark">Темна</string>
+<string name="theme_light">Світла</string>
+<string name="theme_system">Системна</string>
+<string name="language_system">Системна</string>
+<string name="pullup_parameters">Параметри підтягувань</string>
+<string name="down_angle">Кут рук унизу</string>
+<string name="up_angle">Кут рук угорі</string>
+<string name="top_hold">Затримка вгорі</string>
+<string name="reset_default">Скинути до типового</string>
+<string name="backup">Резервна копія</string>
+<string name="save_backup">Зберегти копію</string>
+<string name="restore_backup">Відновити</string>
+<string name="backup_hint">Налаштування та історія тренувань зберігаються разом</string>
+<string name="about">Про застосунок</string>
+<string name="keep_screen_on">Не вимикати екран під час тренування</string>
+<string name="screen_on_always">Активно, поки відкритий екран тренування</string>
+<string name="back">Назад</string>
+<string name="auto">Авто</string>
+<string name="bar_line">Лінія</string>
+<string name="new_attempt">Нова</string>
+<string name="count_tts_on">Озвучення рахунку увімкнено</string>
+<string name="count_tts_off">Озвучення рахунку вимкнено</string>
+<string name="coach_tts_on">Голосові підказки увімкнено</string>
+<string name="coach_tts_off">Голосові підказки вимкнено</string>
+<string name="attempt_today">СПРОБА / СЬОГОДНІ ↻</string>
+<string name="today">СЬОГОДНІ ↻</string>
+<string name="all_time">ЗА ВЕСЬ ЧАС ↻</string>
+<string name="edit_attempt">Редагувати поточну спробу</string>
+<string name="open_history">Відкрити історію</string>
+<string name="camera">Камера</string>
+<string name="show_body_and_hang">ПОКАЖІТЬ У КАДРІ КОРПУС І НОГИ\nВІЗЬМІТЬСЯ ЗА ПЕРЕКЛАДИНУ Й ПОВИСНІТЬ</string>
+<string name="touch_bar">ТОРКНІТЬСЯ ПЕРЕКЛАДИНИ</string>
+<string name="bar_set">ПЕРЕКЛАДИНУ ЗАДАНО ✓</string>
+<string name="bar_found">ПЕРЕКЛАДИНУ ЗНАЙДЕНО ✓</string>
+<string name="ready">ГОТОВО</string>
+<string name="stand_in_frame">СТАНЬТЕ ПОВНІСТЮ В КАДР</string>
+<string name="stay_still_search">НЕ РУХАЙТЕСЯ • ПОШУК %1$d/%2$d</string>
+<string name="can_start">МОЖНА ПОЧИНАТИ</string>
+<string name="going_up">ВГОРУ ↑</string>
+<string name="counted">ЗАРАХОВАНО ✓</string>
+<string name="at_top">УГОРІ</string>
+<string name="go_lower">ОПУСТІТЬСЯ НИЖЧЕ ↓</string>
+<string name="straighten_arms">ВИПРЯМІТЬ РУКИ</string>
+<string name="edit_score">РЕДАГУВАТИ СПРОБУ</string>
+<string name="score_fixed">РАХУНОК ВИПРАВЛЕНО ✓</string>
+<string name="changes_cancelled">ЗМІНИ СКАСОВАНО</string>
+<string name="tts_bar_set">Перекладину задано</string>
+<string name="tts_hang">Візьміться за перекладину й спокійно повисніть</string>
+<string name="tts_touch_bar">Торкніться перекладини на зображенні</string>
+<string name="tts_bar_found">Перекладину знайдено</string>
+<string name="tts_can_start">Можна починати</string>
+<string name="tts_go_lower_straight">Опустіться нижче й випряміть руки</string>
+<string name="tts_go_lower">Опустіться нижче</string>
+<string name="tts_go_higher">Підніміться вище</string>
+<string name="settings_applied_restart">Мова застосовується після повторного відкриття екрана</string>
+<string name="backup_saved">Копію збережено</string>
+<string name="backup_error_save">Не вдалося зберегти копію: %1$s</string>
+<string name="backup_error_read">Не вдалося прочитати копію: %1$s</string>
+<string name="restore_title">Відновити дані</string>
+<string name="restore_message">Об’єднати копію з поточною історією чи замінити історію?</string>
+<string name="merge">Об’єднати</string>
+<string name="replace">Замінити</string>
+<string name="cancel">Скасувати</string>
+<string name="ok">OK</string>
+<string name="history_title">ІСТОРІЯ</string>
+<string name="history_subtitle">Усі збережені спроби за днями</string>
+<string name="history_empty">Історія поки порожня\nЗробіть перше підтягування</string>
+<string name="day_total">%1$d сьогодні</string>
+<string name="reps_count">%1$d повт.</string>
+<string name="splash_subtitle">Кожне повторення важливе</string>
+<string name="draw_bar_line">ПРОВЕДІТЬ ЛІНІЮ ПО ПЕРЕКЛАДИНІ</string>
+<string name="calibration">КАЛІБРУВАННЯ</string>
+<string name="error">ПОМИЛКА</string>
+<string name="unknown_error">Невідома помилка</string>
+<string name="camera_permission_required">Потрібен дозвіл на камеру</string>
+<string name="mediapipe_error">MediaPipe не запустився: %1$s</string>
+<string name="tts_unavailable">TTS недоступний на цьому пристрої</string>
+<string name="backup_file_hint">Файл можна зберегти локально або в хмарі через системний вибір файлів</string>
+<string name="help_title">Допомога</string>
+<string name="help_open">Відкрити інструкцію</string>
+<string name="help_content" formatted="false">## Швидкий старт
+
+Закріпіть телефон так, щоб камера бачила корпус, руки й частину ніг. Використайте Авто або Лінію, повисніть із випрямленими руками, підтягніться вгору й опустіться назад.
+
+## Калібрування і пауза
+
+Авто шукає перекладину, коли ви висите нерухомо. Лінія задає її вручну. Пауза зупиняє розпізнавання, рахунок і TTS; після продовження перекладина калібрується знову.
+
+## Підрахунок
+
+Повторення потребує правильної нижньої позиції, руху вгору, правильної верхньої позиції та спуску. Для широкого хвату автоматично додається невеликий допуск кута. При виді зі спини може використовуватися підйом плечей, якщо обличчя не видно надійно.
+
+## Керування
+
+Рахунок перемикає Спроба/Сьогодні, Сьогодні та За весь час. Нова починає нову спробу, олівець виправляє результат. Поточна спроба та обидві голосові кнопки зберігаються після перезапуску.
+
+## Налаштування і бекап
+
+Можна змінювати мову, тему й параметри детектора. JSON-копія містить історію й налаштування та може бути об’єднана або замінити дані.</string>
+</resources>
