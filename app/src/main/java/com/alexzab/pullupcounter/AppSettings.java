@@ -25,6 +25,14 @@ public final class AppSettings {
     private static final String KEY_UP_ANGLE = "up_angle";
     private static final String KEY_TOP_HOLD_MS = "top_hold_ms";
     private static final String KEY_SCORE_MODE = "score_mode";
+    private static final String KEY_COUNT_SPEECH = "count_speech";
+    private static final String KEY_ADVICE_SPEECH = "advice_speech";
+    private static final String KEY_ACTIVE_ATTEMPT_ID = "active_attempt_id";
+    private static final String KEY_ACTIVE_ATTEMPT_REPS = "active_attempt_reps";
+    private static final String KEY_ACTIVE_ATTEMPT_DAY = "active_attempt_day";
+    private static final String KEY_PARAMETER_PROFILE_VERSION = "parameter_profile_version";
+
+    public static final int PARAMETER_PROFILE_VERSION = 1;
 
     private final SharedPreferences prefs;
 
@@ -47,6 +55,32 @@ public final class AppSettings {
     public int getScoreMode(int fallback) { return prefs.getInt(KEY_SCORE_MODE, fallback); }
     public void setScoreMode(int value) { prefs.edit().putInt(KEY_SCORE_MODE, value).apply(); }
 
+    public boolean isCountSpeechEnabled() { return prefs.getBoolean(KEY_COUNT_SPEECH, false); }
+    public void setCountSpeechEnabled(boolean value) { prefs.edit().putBoolean(KEY_COUNT_SPEECH, value).apply(); }
+
+    public boolean isAdviceSpeechEnabled() { return prefs.getBoolean(KEY_ADVICE_SPEECH, false); }
+    public void setAdviceSpeechEnabled(boolean value) { prefs.edit().putBoolean(KEY_ADVICE_SPEECH, value).apply(); }
+
+    public long getActiveAttemptId() { return prefs.getLong(KEY_ACTIVE_ATTEMPT_ID, -1L); }
+    public int getActiveAttemptReps() { return Math.max(0, prefs.getInt(KEY_ACTIVE_ATTEMPT_REPS, 0)); }
+    public long getActiveAttemptDay() { return prefs.getLong(KEY_ACTIVE_ATTEMPT_DAY, -1L); }
+
+    public void saveActiveAttempt(long attemptId, int reps, long dayStart) {
+        prefs.edit()
+                .putLong(KEY_ACTIVE_ATTEMPT_ID, attemptId)
+                .putInt(KEY_ACTIVE_ATTEMPT_REPS, Math.max(0, reps))
+                .putLong(KEY_ACTIVE_ATTEMPT_DAY, dayStart)
+                .apply();
+    }
+
+    public void clearActiveAttempt() {
+        prefs.edit()
+                .remove(KEY_ACTIVE_ATTEMPT_ID)
+                .remove(KEY_ACTIVE_ATTEMPT_REPS)
+                .remove(KEY_ACTIVE_ATTEMPT_DAY)
+                .apply();
+    }
+
     public int getTopHoldMs() { return clamp(prefs.getInt(KEY_TOP_HOLD_MS, DEFAULT_TOP_HOLD_MS), MIN_TOP_HOLD_MS, MAX_TOP_HOLD_MS); }
     public void setTopHoldMs(int value) { prefs.edit().putInt(KEY_TOP_HOLD_MS, clamp(value, MIN_TOP_HOLD_MS, MAX_TOP_HOLD_MS)).apply(); }
 
@@ -66,6 +100,9 @@ public final class AppSettings {
         o.put("upAngle", getUpAngle());
         o.put("topHoldMs", getTopHoldMs());
         o.put("scoreMode", getScoreMode(0));
+        o.put("countSpeech", isCountSpeechEnabled());
+        o.put("adviceSpeech", isAdviceSpeechEnabled());
+        o.put("parameterProfileVersion", PARAMETER_PROFILE_VERSION);
         return o;
     }
 
@@ -77,6 +114,16 @@ public final class AppSettings {
         if (o.has("upAngle")) setUpAngle(o.optInt("upAngle", DEFAULT_UP_ANGLE));
         if (o.has("topHoldMs")) setTopHoldMs(o.optInt("topHoldMs", DEFAULT_TOP_HOLD_MS));
         if (o.has("scoreMode")) setScoreMode(Math.max(0, Math.min(2, o.optInt("scoreMode", 0))));
+        if (o.has("countSpeech")) setCountSpeechEnabled(o.optBoolean("countSpeech", false));
+        if (o.has("adviceSpeech")) setAdviceSpeechEnabled(o.optBoolean("adviceSpeech", false));
+
+        // Parameter profile version is intentionally recorded separately from backup version.
+        // When the new tuned defaults are supplied, migration can preserve user deviation
+        // from the old 150° / 85° / 250 ms baseline instead of blindly copying raw values.
+        if (o.has("parameterProfileVersion")) {
+            prefs.edit().putInt(KEY_PARAMETER_PROFILE_VERSION,
+                    Math.max(1, o.optInt("parameterProfileVersion", 1))).apply();
+        }
     }
 
     private static int clamp(int v, int min, int max) { return Math.max(min, Math.min(max, v)); }
