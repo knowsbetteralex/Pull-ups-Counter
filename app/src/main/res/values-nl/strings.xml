@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Instellingen</string>
+<string name="history">Geschiedenis</string>
+<string name="general">Algemeen</string>
+<string name="language">Taal</string>
+<string name="theme">Thema</string>
+<string name="theme_dark">Donker</string>
+<string name="theme_light">Licht</string>
+<string name="theme_system">Systeem</string>
+<string name="language_system">Systeem</string>
+<string name="pullup_parameters">Optrekparameters</string>
+<string name="down_angle">Armhoek onderaan</string>
+<string name="up_angle">Armhoek bovenaan</string>
+<string name="top_hold">Vasthoudtijd bovenaan</string>
+<string name="reset_default">Terug naar standaard</string>
+<string name="backup">Back-up</string>
+<string name="save_backup">Back-up opslaan</string>
+<string name="restore_backup">Herstellen</string>
+<string name="backup_hint">Instellingen en trainingsgeschiedenis worden samen opgeslagen</string>
+<string name="about">Over</string>
+<string name="keep_screen_on">Scherm aanhouden tijdens training</string>
+<string name="screen_on_always">Actief zolang het trainingsscherm open is</string>
+<string name="back">Terug</string>
+<string name="auto">Auto</string>
+<string name="bar_line">Lijn</string>
+<string name="new_attempt">Nieuw</string>
+<string name="count_tts_on">Telstem aan</string>
+<string name="count_tts_off">Telstem uit</string>
+<string name="coach_tts_on">Spraakadvies aan</string>
+<string name="coach_tts_off">Spraakadvies uit</string>
+<string name="attempt_today">SET / VANDAAG ↻</string>
+<string name="today">VANDAAG ↻</string>
+<string name="all_time">TOTAAL ↻</string>
+<string name="edit_attempt">Huidige set bewerken</string>
+<string name="open_history">Geschiedenis openen</string>
+<string name="camera">Camera</string>
+<string name="show_body_and_hang">TOON LICHAAM EN BENEN IN BEELD\nPAK DE STANG EN GA HANGEN</string>
+<string name="touch_bar">RAAK DE STANG AAN</string>
+<string name="bar_set">STANG INGESTELD ✓</string>
+<string name="bar_found">STANG GEVONDEN ✓</string>
+<string name="ready">KLAAR</string>
+<string name="stand_in_frame">GA VOLLEDIG IN BEELD STAAN</string>
+<string name="stay_still_search">BLIJF STIL • ZOEKEN %1$d/%2$d</string>
+<string name="can_start">JE KUNT BEGINNEN</string>
+<string name="going_up">OMHOOG ↑</string>
+<string name="counted">GETELD ✓</string>
+<string name="at_top">BOVENAAN</string>
+<string name="go_lower">GA LAGER ↓</string>
+<string name="straighten_arms">STREK JE ARMEN</string>
+<string name="edit_score">SET BEWERKEN</string>
+<string name="score_fixed">AANTAL AANGEPAST ✓</string>
+<string name="changes_cancelled">WIJZIGINGEN GEANNULEERD</string>
+<string name="tts_bar_set">Stang ingesteld</string>
+<string name="tts_hang">Pak de stang en blijf rustig hangen</string>
+<string name="tts_touch_bar">Raak de stang in het beeld aan</string>
+<string name="tts_bar_found">Stang gevonden</string>
+<string name="tts_can_start">Je kunt beginnen</string>
+<string name="tts_go_lower_straight">Ga lager en strek je armen</string>
+<string name="tts_go_lower">Ga lager</string>
+<string name="tts_go_higher">Ga hoger</string>
+<string name="settings_applied_restart">Taal wordt toegepast nadat dit scherm opnieuw is geopend</string>
+<string name="backup_saved">Back-up opgeslagen</string>
+<string name="backup_error_save">Back-up kon niet worden opgeslagen: %1$s</string>
+<string name="backup_error_read">Back-up kon niet worden gelezen: %1$s</string>
+<string name="restore_title">Gegevens herstellen</string>
+<string name="restore_message">Back-up samenvoegen met huidige geschiedenis of huidige geschiedenis vervangen?</string>
+<string name="merge">Samenvoegen</string>
+<string name="replace">Vervangen</string>
+<string name="cancel">Annuleren</string>
+<string name="ok">OK</string>
+<string name="history_title">GESCHIEDENIS</string>
+<string name="history_subtitle">Alle opgeslagen sets per dag</string>
+<string name="history_empty">Nog geen geschiedenis\nDoe je eerste pull-up</string>
+<string name="day_total">%1$d vandaag</string>
+<string name="reps_count">%1$d herh.</string>
+<string name="splash_subtitle">Elke herhaling telt</string>
+<string name="draw_bar_line">TEKEN DE LIJN LANGS DE STANG</string>
+<string name="calibration">KALIBRATIE</string>
+<string name="error">FOUT</string>
+<string name="unknown_error">Onbekende fout</string>
+<string name="camera_permission_required">Cameratoestemming is vereist</string>
+<string name="mediapipe_error">MediaPipe kon niet starten: %1$s</string>
+<string name="tts_unavailable">TTS is niet beschikbaar op dit apparaat</string>
+<string name="backup_file_hint">Het bestand kan lokaal of in de cloud worden opgeslagen via de systeembestandskiezer</string>
+<string name="help_title">Help</string>
+<string name="help_open">Handleiding openen</string>
+<string name="help_content" formatted="false">## Snel starten
+
+1. Zet de telefoon vast zodat de voorcamera bovenlichaam, armen en minstens een deel van de benen ziet. 2. Laat de app de stang automatisch vinden of gebruik Lijn. 3. Hang met gestrekte armen onder de stang. 4. Trek op tot de bovenste positie. 5. Zak weer met gestrekte armen. Een volledige geldige cyclus telt als één herhaling.
+
+## Stang kalibreren
+
+Auto zoekt de stang terwijl je stil hangt. Blijf volledig in beeld tot STANG GEVONDEN verschijnt. Met Lijn teken je de stang handmatig in het camerabeeld. Gebruik dit bij moeilijke achtergrond, slecht licht of onstabiele automatische detectie.
+
+## Hoofdscherm
+
+Het skelet toont de MediaPipe-houding. De horizontale lijn is de gekalibreerde stang. Tik op de teller om Set/Vandaag, Vandaag en Totaal te wisselen. Nieuw start een nieuwe set zonder geschiedenis te wissen. Met het potlood corrigeer je de huidige set.
+
+## Pauze
+
+Tik op een leeg deel van het camerabeeld om te pauzeren of door te gaan. Tijdens pauze stoppen herkenning, telling en TTS; skelet en stang verdwijnen. Na hervatten wordt opnieuw gekalibreerd. Auto zoekt opnieuw; bij handmatige modus moet de lijn opnieuw worden gezet.
+
+## Telling
+
+Een herhaling vereist een geldige onderste positie, beweging omhoog, geldige bovenpositie en terugkeer omlaag. De app controleert armhoeken, lichaamspositie en waar mogelijk kin/mond ten opzichte van de stang. Bij brede greep en achteraanzicht kan schouderverplaatsing als extra signaal worden gebruikt.
+
+## Spraak
+
+Telstem en coachstem zijn apart. De taal volgt de app-taal. Ontbreekt een systeemstem, dan kan Android aanbieden een spraakpakket te downloaden. De standen van beide knoppen worden bewaard.
+
+## Geschiedenis en instellingen
+
+Geschiedenis bewaart sets per datum. Instellingen bevatten taal, thema en detectorparameters. Onderste armhoek: 140–170°, bovenste armhoek: 65–100°, vasthoudtijd boven: 100–1000 ms. Het resetpictogram herstelt de standaardwaarde.
+
+## Back-up
+
+Back-up bevat geschiedenis en instellingen. Bij herstel kun je samenvoegen of vervangen. Oudere v1-back-ups blijven ondersteund.
+
+## Tips
+
+Zet de telefoon stabiel, vermijd sterk tegenlicht en houd schouders, heupen en een deel van de benen zichtbaar. Gebruik Lijn als Auto onbetrouwbaar is. Pas detectorwaarden stap voor stap aan.</string>
+</resources>
