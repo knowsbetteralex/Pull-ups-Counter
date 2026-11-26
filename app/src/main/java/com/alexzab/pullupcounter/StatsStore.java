@@ -36,6 +36,18 @@ public final class StatsStore extends SQLiteOpenHelper {
         }
     }
 
+    public static final class ActiveAttempt {
+        public final long id;
+        public final long startedAt;
+        public final int reps;
+
+        ActiveAttempt(long id, long startedAt, int reps) {
+            this.id = id;
+            this.startedAt = startedAt;
+            this.reps = reps;
+        }
+    }
+
     public static final class DayHistory {
         public final long dayStart;
         public int total;
@@ -108,6 +120,17 @@ public final class StatsStore extends SQLiteOpenHelper {
         recreated.put("updated_at", now);
         recreated.put("reps", reps);
         return db.insertOrThrow("attempts", null, recreated);
+    }
+
+    public ActiveAttempt getAttempt(long attemptId) {
+        if (attemptId <= 0) return null;
+        SQLiteDatabase db = getReadableDatabase();
+        try (Cursor cursor = db.rawQuery(
+                "SELECT id, started_at, reps FROM attempts WHERE id = ? LIMIT 1",
+                new String[]{Long.toString(attemptId)})) {
+            if (!cursor.moveToFirst()) return null;
+            return new ActiveAttempt(cursor.getLong(0), cursor.getLong(1), cursor.getInt(2));
+        }
     }
 
     public int getTodayTotal() {

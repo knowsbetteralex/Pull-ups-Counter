@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Nastavení</string>
+<string name="history">Historie</string>
+<string name="general">Obecné</string>
+<string name="language">Jazyk</string>
+<string name="theme">Motiv</string>
+<string name="theme_dark">Tmavý</string>
+<string name="theme_light">Světlý</string>
+<string name="theme_system">Systémový</string>
+<string name="language_system">Systémový</string>
+<string name="pullup_parameters">Parametry shybů</string>
+<string name="down_angle">Úhel paží dole</string>
+<string name="up_angle">Úhel paží nahoře</string>
+<string name="top_hold">Výdrž nahoře</string>
+<string name="reset_default">Obnovit výchozí</string>
+<string name="backup">Záloha</string>
+<string name="save_backup">Uložit zálohu</string>
+<string name="restore_backup">Obnovit</string>
+<string name="backup_hint">Nastavení a historie tréninků se ukládají společně</string>
+<string name="about">O aplikaci</string>
+<string name="keep_screen_on">Nevypínat displej při tréninku</string>
+<string name="screen_on_always">Aktivní, dokud je otevřen trénink</string>
+<string name="back">Zpět</string>
+<string name="auto">Auto</string>
+<string name="bar_line">Čára</string>
+<string name="new_attempt">Nová</string>
+<string name="count_tts_on">Hlas počítadla zapnut</string>
+<string name="count_tts_off">Hlas počítadla vypnut</string>
+<string name="coach_tts_on">Hlasové pokyny zapnuty</string>
+<string name="coach_tts_off">Hlasové pokyny vypnuty</string>
+<string name="attempt_today">SÉRIE / DNES ↻</string>
+<string name="today">DNES ↻</string>
+<string name="all_time">CELKEM ↻</string>
+<string name="edit_attempt">Upravit aktuální sérii</string>
+<string name="open_history">Otevřít historii</string>
+<string name="camera">Kamera</string>
+<string name="show_body_and_hang">UKAŽTE TĚLO A NOHY V ZÁBĚRU\nCHYŤTE HRAZDU A ZAVĚSTE SE</string>
+<string name="touch_bar">DOTKNĚTE SE HRAZDY</string>
+<string name="bar_set">HRAZDA NASTAVENA ✓</string>
+<string name="bar_found">HRAZDA NALEZENA ✓</string>
+<string name="ready">PŘIPRAVENO</string>
+<string name="stand_in_frame">POSTAVTE SE CELÍ DO ZÁBĚRU</string>
+<string name="stay_still_search">NEHÝBEJTE SE • HLEDÁNÍ %1$d/%2$d</string>
+<string name="can_start">MŮŽETE ZAČÍT</string>
+<string name="going_up">NAHORU ↑</string>
+<string name="counted">ZAPOČÍTÁNO ✓</string>
+<string name="at_top">NAHOŘE</string>
+<string name="go_lower">NÍŽ ↓</string>
+<string name="straighten_arms">NAROVNEJTE PAŽE</string>
+<string name="edit_score">UPRAVIT SÉRII</string>
+<string name="score_fixed">POČET OPRAVEN ✓</string>
+<string name="changes_cancelled">ZMĚNY ZRUŠENY</string>
+<string name="tts_bar_set">Hrazda nastavena</string>
+<string name="tts_hang">Chyťte hrazdu a klidně se zavěste</string>
+<string name="tts_touch_bar">Dotkněte se hrazdy na obraze</string>
+<string name="tts_bar_found">Hrazda nalezena</string>
+<string name="tts_can_start">Můžete začít</string>
+<string name="tts_go_lower_straight">Jděte níž a narovnejte paže</string>
+<string name="tts_go_lower">Jděte níž</string>
+<string name="tts_go_higher">Jděte výš</string>
+<string name="settings_applied_restart">Jazyk se použije po znovuotevření obrazovky</string>
+<string name="backup_saved">Záloha uložena</string>
+<string name="backup_error_save">Zálohu nelze uložit: %1$s</string>
+<string name="backup_error_read">Zálohu nelze načíst: %1$s</string>
+<string name="restore_title">Obnovit data</string>
+<string name="restore_message">Sloučit zálohu se současnou historií nebo historii nahradit?</string>
+<string name="merge">Sloučit</string>
+<string name="replace">Nahradit</string>
+<string name="cancel">Zrušit</string>
+<string name="ok">OK</string>
+<string name="history_title">HISTORIE</string>
+<string name="history_subtitle">Všechny uložené série podle dnů</string>
+<string name="history_empty">Historie je prázdná\nUdělejte první shyb</string>
+<string name="day_total">%1$d dnes</string>
+<string name="reps_count">%1$d opak.</string>
+<string name="splash_subtitle">Každé opakování se počítá</string>
+<string name="draw_bar_line">NAKRESLETE ČÁRU PODÉL HRAZDY</string>
+<string name="calibration">KALIBRACE</string>
+<string name="error">CHYBA</string>
+<string name="unknown_error">Neznámá chyba</string>
+<string name="camera_permission_required">Je vyžadováno oprávnění ke kameře</string>
+<string name="mediapipe_error">MediaPipe se nepodařilo spustit: %1$s</string>
+<string name="tts_unavailable">TTS není na tomto zařízení dostupné</string>
+<string name="backup_file_hint">Soubor lze uložit lokálně nebo do cloudu pomocí systémového výběru souborů</string>
+<string name="help_title">Nápověda</string>
+<string name="help_open">Otevřít návod</string>
+<string name="help_content" formatted="false">## Rychlý start
+
+Upevněte telefon, aby kamera viděla trup, paže a část nohou. Zvolte Auto nebo Čára, zavěste se s nataženými pažemi, vytáhněte se nahoru a vraťte se dolů.
+
+## Kalibrace a pauza
+
+Auto hledá hrazdu při klidném visu. Čára ji nastaví ručně. Při pauze se počítání zastaví a po pokračování se hrazda znovu kalibruje.
+
+## Počítání
+
+Opakování vyžaduje platnou dolní a horní polohu. Široký úchop má automatickou úhlovou toleranci; při pohledu zezadu může horní polohu potvrdit zvednutí ramen místo obličeje.
+
+## Ovládání
+
+Počítadlo přepíná Série/Dnes, Dnes a Celkem. Nová zahájí novou sérii, tužka upraví počet. Aktuální série a hlasové přepínače se uchovávají po restartu.
+
+## Nastavení a záloha
+
+Lze měnit jazyk, motiv a bezpečně omezené parametry detektoru. Záloha JSON obsahuje historii i nastavení a lze ji sloučit nebo nahradit.</string>
+</resources>

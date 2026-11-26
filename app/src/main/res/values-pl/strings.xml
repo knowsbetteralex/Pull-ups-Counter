@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Ustawienia</string>
+<string name="history">Historia</string>
+<string name="general">Ogólne</string>
+<string name="language">Język</string>
+<string name="theme">Motyw</string>
+<string name="theme_dark">Ciemny</string>
+<string name="theme_light">Jasny</string>
+<string name="theme_system">Systemowy</string>
+<string name="language_system">Systemowy</string>
+<string name="pullup_parameters">Parametry podciągania</string>
+<string name="down_angle">Kąt ramion na dole</string>
+<string name="up_angle">Kąt ramion na górze</string>
+<string name="top_hold">Czas utrzymania u góry</string>
+<string name="reset_default">Przywróć domyślne</string>
+<string name="backup">Kopia zapasowa</string>
+<string name="save_backup">Zapisz kopię</string>
+<string name="restore_backup">Przywróć</string>
+<string name="backup_hint">Ustawienia i historia treningów są zapisywane razem</string>
+<string name="about">O aplikacji</string>
+<string name="keep_screen_on">Nie wyłączaj ekranu podczas treningu</string>
+<string name="screen_on_always">Aktywne, gdy ekran treningu jest otwarty</string>
+<string name="back">Wstecz</string>
+<string name="auto">Auto</string>
+<string name="bar_line">Linia</string>
+<string name="new_attempt">Nowa</string>
+<string name="count_tts_on">Głos licznika włączony</string>
+<string name="count_tts_off">Głos licznika wyłączony</string>
+<string name="coach_tts_on">Wskazówki głosowe włączone</string>
+<string name="coach_tts_off">Wskazówki głosowe wyłączone</string>
+<string name="attempt_today">SERIA / DZIŚ ↻</string>
+<string name="today">DZIŚ ↻</string>
+<string name="all_time">ŁĄCZNIE ↻</string>
+<string name="edit_attempt">Edytuj bieżącą serię</string>
+<string name="open_history">Otwórz historię</string>
+<string name="camera">Aparat</string>
+<string name="show_body_and_hang">POKAŻ TUŁÓW I NOGI W KADRZE\nCHWYĆ DRĄŻEK I ZAWIŚNIJ</string>
+<string name="touch_bar">DOTKNIJ DRĄŻKA</string>
+<string name="bar_set">DRĄŻEK USTAWIONY ✓</string>
+<string name="bar_found">DRĄŻEK ZNALEZIONY ✓</string>
+<string name="ready">GOTOWE</string>
+<string name="stand_in_frame">STAŃ W CAŁOŚCI W KADRZE</string>
+<string name="stay_still_search">NIE RUSZAJ SIĘ • SZUKANIE %1$d/%2$d</string>
+<string name="can_start">MOŻESZ ZACZĄĆ</string>
+<string name="going_up">W GÓRĘ ↑</string>
+<string name="counted">ZALICZONE ✓</string>
+<string name="at_top">NA GÓRZE</string>
+<string name="go_lower">ZEJDŹ NIŻEJ ↓</string>
+<string name="straighten_arms">WYPROSTUJ RAMIONA</string>
+<string name="edit_score">EDYTUJ SERIĘ</string>
+<string name="score_fixed">WYNIK POPRAWIONY ✓</string>
+<string name="changes_cancelled">ZMIANY ANULOWANE</string>
+<string name="tts_bar_set">Drążek ustawiony</string>
+<string name="tts_hang">Chwyć drążek i spokojnie zawiśnij</string>
+<string name="tts_touch_bar">Dotknij drążka na obrazie</string>
+<string name="tts_bar_found">Drążek znaleziony</string>
+<string name="tts_can_start">Możesz zacząć</string>
+<string name="tts_go_lower_straight">Zejdź niżej i wyprostuj ramiona</string>
+<string name="tts_go_lower">Zejdź niżej</string>
+<string name="tts_go_higher">Podciągnij się wyżej</string>
+<string name="settings_applied_restart">Język zostanie zastosowany po ponownym otwarciu ekranu</string>
+<string name="backup_saved">Kopia zapisana</string>
+<string name="backup_error_save">Nie udało się zapisać kopii: %1$s</string>
+<string name="backup_error_read">Nie udało się odczytać kopii: %1$s</string>
+<string name="restore_title">Przywróć dane</string>
+<string name="restore_message">Scalić kopię z bieżącą historią czy zastąpić historię?</string>
+<string name="merge">Scal</string>
+<string name="replace">Zastąp</string>
+<string name="cancel">Anuluj</string>
+<string name="ok">OK</string>
+<string name="history_title">HISTORIA</string>
+<string name="history_subtitle">Wszystkie zapisane serie według dni</string>
+<string name="history_empty">Historia jest pusta\nZrób pierwsze podciągnięcie</string>
+<string name="day_total">%1$d dzisiaj</string>
+<string name="reps_count">%1$d powt.</string>
+<string name="splash_subtitle">Każde powtórzenie się liczy</string>
+<string name="draw_bar_line">NARYSUJ LINIĘ WZDŁUŻ DRĄŻKA</string>
+<string name="calibration">KALIBRACJA</string>
+<string name="error">BŁĄD</string>
+<string name="unknown_error">Nieznany błąd</string>
+<string name="camera_permission_required">Wymagane jest zezwolenie na aparat</string>
+<string name="mediapipe_error">Nie udało się uruchomić MediaPipe: %1$s</string>
+<string name="tts_unavailable">TTS nie jest dostępny na tym urządzeniu</string>
+<string name="backup_file_hint">Plik można zapisać lokalnie lub w chmurze przez systemowy wybór plików</string>
+<string name="help_title">Pomoc</string>
+<string name="help_open">Otwórz instrukcję</string>
+<string name="help_content" formatted="false">## Szybki start
+
+Ustaw telefon tak, aby kamera widziała tułów, ręce i część nóg. Wybierz Auto lub Linia, zawiśnij z wyprostowanymi rękami, podciągnij się do góry i wróć na dół. Pełny cykl daje jedno powtórzenie.
+
+## Kalibracja
+
+Auto wykrywa drążek podczas spokojnego zwisu. Linia pozwala narysować go ręcznie. Po pauzie kalibracja jest wykonywana ponownie w tym samym trybie.
+
+## Ekran główny
+
+Dotknięcie licznika przełącza Seria/Dziś, Dziś i Łącznie. Nowa zaczyna nową serię. Ołówek poprawia bieżący wynik. Bieżąca seria oraz stany przycisków głosu są zachowywane po restarcie aplikacji.
+
+## Liczenie
+
+Detektor wymaga dolnej pozycji, ruchu w górę, prawidłowej górnej pozycji i powrotu w dół. Przy szerokim chwycie automatycznie dopuszcza nieco większy kąt u góry. Przy widoku od tyłu może używać ruchu barków zamiast twarzy.
+
+## Głos i historia
+
+Głos licznika i wskazówki są niezależne. Historia zapisuje serie, sumę dzienną i łączną. TTS używa wybranego języka i może wymagać pobrania głosu systemowego.
+
+## Parametry
+
+Dolny kąt 140–170°, górny 65–100°, czas u góry 100–1000 ms. Reset przywraca wartość domyślną.
+
+## Kopia zapasowa
+
+Kopia JSON zawiera historię i ustawienia. Można ją scalić z bieżącymi danymi lub je zastąpić.</string>
+</resources>

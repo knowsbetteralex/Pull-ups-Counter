@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Asetukset</string>
+<string name="history">Historia</string>
+<string name="general">Yleiset</string>
+<string name="language">Kieli</string>
+<string name="theme">Teema</string>
+<string name="theme_dark">Tumma</string>
+<string name="theme_light">Vaalea</string>
+<string name="theme_system">Järjestelmä</string>
+<string name="language_system">Järjestelmä</string>
+<string name="pullup_parameters">Leuanvetoparametrit</string>
+<string name="down_angle">Käsivarsien kulma alhaalla</string>
+<string name="up_angle">Käsivarsien kulma ylhäällä</string>
+<string name="top_hold">Pitoaika ylhäällä</string>
+<string name="reset_default">Palauta oletus</string>
+<string name="backup">Varmuuskopio</string>
+<string name="save_backup">Tallenna kopio</string>
+<string name="restore_backup">Palauta</string>
+<string name="backup_hint">Asetukset ja harjoitushistoria tallennetaan yhdessä</string>
+<string name="about">Tietoja</string>
+<string name="keep_screen_on">Pidä näyttö päällä harjoituksen aikana</string>
+<string name="screen_on_always">Aktiivinen harjoitusnäytön ollessa auki</string>
+<string name="back">Takaisin</string>
+<string name="auto">Auto</string>
+<string name="bar_line">Viiva</string>
+<string name="new_attempt">Uusi</string>
+<string name="count_tts_on">Laskuriääni päällä</string>
+<string name="count_tts_off">Laskuriääni pois</string>
+<string name="coach_tts_on">Ääniohjeet päällä</string>
+<string name="coach_tts_off">Ääniohjeet pois</string>
+<string name="attempt_today">SARJA / TÄNÄÄN ↻</string>
+<string name="today">TÄNÄÄN ↻</string>
+<string name="all_time">YHTEENSÄ ↻</string>
+<string name="edit_attempt">Muokkaa nykyistä sarjaa</string>
+<string name="open_history">Avaa historia</string>
+<string name="camera">Kamera</string>
+<string name="show_body_and_hang">NÄYTÄ VARTALO JA JALAT KUVASSA\nTARTU TANKOON JA ROIKU</string>
+<string name="touch_bar">KOSKETA TANKOA</string>
+<string name="bar_set">TANKO ASETETTU ✓</string>
+<string name="bar_found">TANKO LÖYDETTY ✓</string>
+<string name="ready">VALMIS</string>
+<string name="stand_in_frame">ASETU KOKONAAN KUVAAN</string>
+<string name="stay_still_search">PYSY PAIKALLASI • HAKU %1$d/%2$d</string>
+<string name="can_start">VOIT ALOITTAA</string>
+<string name="going_up">YLÖS ↑</string>
+<string name="counted">LASKETTU ✓</string>
+<string name="at_top">YLHÄÄLLÄ</string>
+<string name="go_lower">LASKEUDU ALEMMAKSI ↓</string>
+<string name="straighten_arms">SUORISTA KÄDET</string>
+<string name="edit_score">MUOKKAA SARJAA</string>
+<string name="score_fixed">MÄÄRÄ KORJATTU ✓</string>
+<string name="changes_cancelled">MUUTOKSET PERUTTU</string>
+<string name="tts_bar_set">Tanko asetettu</string>
+<string name="tts_hang">Tartu tankoon ja roiku rauhallisesti</string>
+<string name="tts_touch_bar">Kosketa tankoa kuvassa</string>
+<string name="tts_bar_found">Tanko löydetty</string>
+<string name="tts_can_start">Voit aloittaa</string>
+<string name="tts_go_lower_straight">Laskeudu alemmas ja suorista kädet</string>
+<string name="tts_go_lower">Laskeudu alemmas</string>
+<string name="tts_go_higher">Nouse ylemmäs</string>
+<string name="settings_applied_restart">Kieli otetaan käyttöön näytön uudelleenavaamisen jälkeen</string>
+<string name="backup_saved">Varmuuskopio tallennettu</string>
+<string name="backup_error_save">Varmuuskopiota ei voitu tallentaa: %1$s</string>
+<string name="backup_error_read">Varmuuskopiota ei voitu lukea: %1$s</string>
+<string name="restore_title">Palauta tiedot</string>
+<string name="restore_message">Yhdistetäänkö kopio nykyiseen historiaan vai korvataanko historia?</string>
+<string name="merge">Yhdistä</string>
+<string name="replace">Korvaa</string>
+<string name="cancel">Peruuta</string>
+<string name="ok">OK</string>
+<string name="history_title">HISTORIA</string>
+<string name="history_subtitle">Kaikki tallennetut sarjat päivittäin</string>
+<string name="history_empty">Historia on tyhjä\nTee ensimmäinen leuanveto</string>
+<string name="day_total">%1$d tänään</string>
+<string name="reps_count">%1$d toistoa</string>
+<string name="splash_subtitle">Jokainen toisto lasketaan</string>
+<string name="draw_bar_line">PIIRRÄ VIIVA TANGON SUUNTAISESTI</string>
+<string name="calibration">KALIBROINTI</string>
+<string name="error">VIRHE</string>
+<string name="unknown_error">Tuntematon virhe</string>
+<string name="camera_permission_required">Kameran käyttöoikeus vaaditaan</string>
+<string name="mediapipe_error">MediaPipe ei käynnistynyt: %1$s</string>
+<string name="tts_unavailable">TTS ei ole käytettävissä tällä laitteella</string>
+<string name="backup_file_hint">Tiedosto voidaan tallentaa paikallisesti tai pilveen järjestelmän tiedostovalitsimella</string>
+<string name="help_title">Ohje</string>
+<string name="help_open">Avaa ohje</string>
+<string name="help_content" formatted="false">## Pika-aloitus
+
+Kiinnitä puhelin niin, että kamera näkee ylävartalon, kädet ja osan jaloista. Käytä Autoa tai Viivaa, roiku suorilla käsillä, vedä ylös ja laskeudu takaisin.
+
+## Kalibrointi ja tauko
+
+Auto löytää tangon kun pysyt paikallasi. Viiva asettaa tangon käsin. Tauko pysäyttää tunnistuksen, laskennan ja TTS:n; jatkamisen jälkeen tanko kalibroidaan uudelleen.
+
+## Laskenta
+
+Yksi toisto vaatii kelvollisen ala-asennon, nousun, kelvollisen yläasennon ja laskun. Leveä ote saa automaattisesti hieman enemmän kulmatoleranssia. Selkä kameraan päin hartioiden nousua voidaan käyttää kun kasvoja ei nähdä luotettavasti.
+
+## Ohjaus
+
+Laskuri vaihtaa Sarja/Tänään, Tänään ja Yhteensä. Uusi aloittaa uuden sarjan ja kynä korjaa tuloksen. Aktiivinen sarja ja molemmat äänipainikkeet säilyvät uudelleenkäynnistyksissä.
+
+## Asetukset ja varmuuskopio
+
+Kieltä, teemaa ja tunnistimen parametreja voi muuttaa. JSON-varmuuskopio sisältää historian ja asetukset ja voidaan yhdistää tai käyttää korvaamiseen.</string>
+</resources>
