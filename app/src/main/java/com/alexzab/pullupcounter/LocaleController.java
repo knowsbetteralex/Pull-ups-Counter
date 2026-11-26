@@ -35,6 +35,16 @@ public final class LocaleController {
         if ("pt".equals(code)) return Locale.forLanguageTag("pt");
         if ("zh-CN".equals(code)) return Locale.SIMPLIFIED_CHINESE;
         if ("ko".equals(code)) return Locale.KOREAN;
+        if ("nl".equals(code)) return Locale.forLanguageTag("nl-NL");
+        if ("pl".equals(code)) return Locale.forLanguageTag("pl-PL");
+        if ("cs".equals(code)) return Locale.forLanguageTag("cs-CZ");
+        if ("ro".equals(code)) return Locale.forLanguageTag("ro-RO");
+        if ("el".equals(code)) return Locale.forLanguageTag("el-GR");
+        if ("sv".equals(code)) return Locale.forLanguageTag("sv-SE");
+        if ("nb".equals(code)) return Locale.forLanguageTag("nb-NO");
+        if ("da".equals(code)) return Locale.forLanguageTag("da-DK");
+        if ("fi".equals(code)) return Locale.forLanguageTag("fi-FI");
+        if ("uk".equals(code)) return Locale.forLanguageTag("uk-UA");
         return Locale.getDefault();
     }
 }
