@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Inställningar</string>
+<string name="history">Historik</string>
+<string name="general">Allmänt</string>
+<string name="language">Språk</string>
+<string name="theme">Tema</string>
+<string name="theme_dark">Mörkt</string>
+<string name="theme_light">Ljust</string>
+<string name="theme_system">System</string>
+<string name="language_system">System</string>
+<string name="pullup_parameters">Pull-up-parametrar</string>
+<string name="down_angle">Armvinkel längst ned</string>
+<string name="up_angle">Armvinkel längst upp</string>
+<string name="top_hold">Hålltid längst upp</string>
+<string name="reset_default">Återställ standard</string>
+<string name="backup">Säkerhetskopia</string>
+<string name="save_backup">Spara kopia</string>
+<string name="restore_backup">Återställ</string>
+<string name="backup_hint">Inställningar och träningshistorik sparas tillsammans</string>
+<string name="about">Om appen</string>
+<string name="keep_screen_on">Håll skärmen tänd under träning</string>
+<string name="screen_on_always">Aktiv så länge träningsskärmen är öppen</string>
+<string name="back">Tillbaka</string>
+<string name="auto">Auto</string>
+<string name="bar_line">Linje</string>
+<string name="new_attempt">Ny</string>
+<string name="count_tts_on">Räknarröst på</string>
+<string name="count_tts_off">Räknarröst av</string>
+<string name="coach_tts_on">Röstinstruktioner på</string>
+<string name="coach_tts_off">Röstinstruktioner av</string>
+<string name="attempt_today">SET / IDAG ↻</string>
+<string name="today">IDAG ↻</string>
+<string name="all_time">TOTALT ↻</string>
+<string name="edit_attempt">Redigera aktuellt set</string>
+<string name="open_history">Öppna historik</string>
+<string name="camera">Kamera</string>
+<string name="show_body_and_hang">VISA KROPP OCH BEN I BILD\nTA TAG I STÅNGEN OCH HÄNG</string>
+<string name="touch_bar">TRYCK PÅ STÅNGEN</string>
+<string name="bar_set">STÅNGEN INSTÄLLD ✓</string>
+<string name="bar_found">STÅNGEN HITTAD ✓</string>
+<string name="ready">KLAR</string>
+<string name="stand_in_frame">STÅ HELT I BILD</string>
+<string name="stay_still_search">STÅ STILL • SÖKER %1$d/%2$d</string>
+<string name="can_start">DU KAN BÖRJA</string>
+<string name="going_up">UPP ↑</string>
+<string name="counted">RÄKNAD ✓</string>
+<string name="at_top">HÖGST UPP</string>
+<string name="go_lower">GÅ LÄGRE ↓</string>
+<string name="straighten_arms">STRÄCK ARMARNA</string>
+<string name="edit_score">REDIGERA SET</string>
+<string name="score_fixed">ANTAL KORRIGERAT ✓</string>
+<string name="changes_cancelled">ÄNDRINGAR AVBRUTNA</string>
+<string name="tts_bar_set">Stången är inställd</string>
+<string name="tts_hang">Ta tag i stången och häng stilla</string>
+<string name="tts_touch_bar">Tryck på stången i bilden</string>
+<string name="tts_bar_found">Stången hittad</string>
+<string name="tts_can_start">Du kan börja</string>
+<string name="tts_go_lower_straight">Gå lägre och sträck armarna</string>
+<string name="tts_go_lower">Gå lägre</string>
+<string name="tts_go_higher">Gå högre</string>
+<string name="settings_applied_restart">Språket används när skärmen öppnas igen</string>
+<string name="backup_saved">Säkerhetskopian sparad</string>
+<string name="backup_error_save">Kunde inte spara kopian: %1$s</string>
+<string name="backup_error_read">Kunde inte läsa kopian: %1$s</string>
+<string name="restore_title">Återställ data</string>
+<string name="restore_message">Slå ihop kopian med historiken eller ersätta historiken?</string>
+<string name="merge">Slå ihop</string>
+<string name="replace">Ersätt</string>
+<string name="cancel">Avbryt</string>
+<string name="ok">OK</string>
+<string name="history_title">HISTORIK</string>
+<string name="history_subtitle">Alla sparade set per dag</string>
+<string name="history_empty">Historiken är tom\nGör din första pull-up</string>
+<string name="day_total">%1$d idag</string>
+<string name="reps_count">%1$d reps</string>
+<string name="splash_subtitle">Varje repetition räknas</string>
+<string name="draw_bar_line">RITA LINJEN LÄNGS STÅNGEN</string>
+<string name="calibration">KALIBRERING</string>
+<string name="error">FEL</string>
+<string name="unknown_error">Okänt fel</string>
+<string name="camera_permission_required">Kamerabehörighet krävs</string>
+<string name="mediapipe_error">MediaPipe kunde inte starta: %1$s</string>
+<string name="tts_unavailable">TTS är inte tillgängligt på enheten</string>
+<string name="backup_file_hint">Filen kan sparas lokalt eller i molnet via systemets filväljare</string>
+<string name="help_title">Hjälp</string>
+<string name="help_open">Öppna instruktioner</string>
+<string name="help_content" formatted="false">## Snabbstart
+
+Fäst telefonen så att kamera ser överkropp, armar och en del av benen. Använd Auto eller Linje, häng med raka armar, dra dig upp och gå ned igen.
+
+## Kalibrering och paus
+
+Auto hittar stången när du hänger stilla. Linje ställer in den manuellt. Paus stoppar igenkänning, räkning och TTS; efter fortsättning kalibreras stången igen.
+
+## Räkning
+
+En repetition kräver korrekt nedre läge, rörelse upp, korrekt toppläge och nedgång. Brett grepp får automatiskt lite större vinkeltolerans. Bakifrån kan axlarnas lyft användas när ansiktet inte syns pålitligt.
+
+## Kontroller
+
+Räknaren växlar Set/Idag, Idag och Totalt. Ny startar nytt set, pennan korrigerar setet. Aktivt set och båda röstknapparna sparas mellan omstarter.
+
+## Inställningar och backup
+
+Språk, tema och detektorparametrar kan ändras. JSON-backup innehåller historik och inställningar och kan slås ihop eller ersätta befintliga data.</string>
+</resources>
