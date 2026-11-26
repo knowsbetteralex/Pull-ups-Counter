@@ -119,6 +119,9 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         scoreMode = loadScoreMode();
         activeDayStart = StatsStore.startOfDay(System.currentTimeMillis());
+        countSpeechEnabled = appSettings.isCountSpeechEnabled();
+        adviceSpeechEnabled = appSettings.isAdviceSpeechEnabled();
+        restoreActiveAttempt();
 
         cameraView = findViewById(R.id.camera_view);
         overlayView = findViewById(R.id.overlay_view);
@@ -169,6 +172,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         countTtsButton.setOnClickListener(v -> toggleCountSpeech());
         adviceTtsButton.setOnClickListener(v -> toggleAdviceSpeech());
         updateTtsButtons();
+        if (countSpeechEnabled || adviceSpeechEnabled) ensureTts();
         resetAdviceSession();
 
         overlayView.setBarSelectionListener(normalizedY -> {
@@ -190,6 +194,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             activeAttemptId = -1L;
             currentAttemptReps = 0;
             activeDayStart = StatsStore.startOfDay(System.currentTimeMillis());
+            appSettings.clearActiveAttempt();
             resetAdviceSession();
             refreshScore();
 
@@ -367,6 +372,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             if (r.countedNow) {
                 currentAttemptReps = r.count;
                 activeAttemptId = statsStore.saveAttemptProgress(activeAttemptId, currentAttemptReps);
+                persistActiveAttempt();
 
                 int todayTotal = statsStore.getTodayTotal();
                 int allTimeTotal = statsStore.getAllTimeTotal();
@@ -550,6 +556,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
             currentAttemptReps = editDraftReps;
             activeAttemptId = statsStore.setAttemptReps(activeAttemptId, currentAttemptReps);
             detector.setCount(currentAttemptReps);
+            persistActiveAttempt();
         }
 
         editingAttempt = false;
@@ -575,9 +582,41 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
         activeDayStart = todayStart;
         activeAttemptId = -1L;
         currentAttemptReps = 0;
+        appSettings.clearActiveAttempt();
         detector.reset();
         resetAdviceSession();
         refreshScore();
+    }
+
+    private void restoreActiveAttempt() {
+        long savedDay = appSettings.getActiveAttemptDay();
+        long savedId = appSettings.getActiveAttemptId();
+        int savedReps = appSettings.getActiveAttemptReps();
+
+        if (savedDay != activeDayStart) {
+            appSettings.clearActiveAttempt();
+            return;
+        }
+
+        if (savedId <= 0L) {
+            currentAttemptReps = savedReps;
+            detector.setCount(currentAttemptReps);
+            return;
+        }
+
+        StatsStore.ActiveAttempt attempt = statsStore.getAttempt(savedId);
+        if (attempt == null || StatsStore.startOfDay(attempt.startedAt) != activeDayStart) {
+            appSettings.clearActiveAttempt();
+            return;
+        }
+
+        activeAttemptId = attempt.id;
+        currentAttemptReps = Math.max(0, attempt.reps);
+        detector.setCount(currentAttemptReps);
+    }
+
+    private void persistActiveAttempt() {
+        appSettings.saveActiveAttempt(activeAttemptId, currentAttemptReps, activeDayStart);
     }
 
     private void refreshScore() {
@@ -623,12 +662,14 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
     private void toggleCountSpeech() {
         countSpeechEnabled = !countSpeechEnabled;
+        appSettings.setCountSpeechEnabled(countSpeechEnabled);
         if (countSpeechEnabled) ensureTts();
         updateTtsButtons();
     }
 
     private void toggleAdviceSpeech() {
         adviceSpeechEnabled = !adviceSpeechEnabled;
+        appSettings.setAdviceSpeechEnabled(adviceSpeechEnabled);
         if (adviceSpeechEnabled) {
             ensureTts();
             resetAdviceSession();
@@ -644,6 +685,8 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 ttsReady = false;
                 countSpeechEnabled = false;
                 adviceSpeechEnabled = false;
+                appSettings.setCountSpeechEnabled(false);
+                appSettings.setAdviceSpeechEnabled(false);
                 updateTtsButtons();
                 Toast.makeText(this, R.string.tts_unavailable, Toast.LENGTH_LONG).show();
                 return;
@@ -824,6 +867,10 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
                 return;
             }
             detector.applySettings(appSettings);
+            countSpeechEnabled = appSettings.isCountSpeechEnabled();
+            adviceSpeechEnabled = appSettings.isAdviceSpeechEnabled();
+            updateTtsButtons();
+            if ((countSpeechEnabled || adviceSpeechEnabled) && tts == null) ensureTts();
         }
         ensureDayBoundary();
         refreshScore();
@@ -835,6 +882,7 @@ public final class MainActivity extends Activity implements PoseEngine.Listener,
 
     @Override
     protected void onPause() {
+        if (appSettings != null) persistActiveAttempt();
         if (cameraController != null) {
             cameraController.close();
             cameraController = null;
