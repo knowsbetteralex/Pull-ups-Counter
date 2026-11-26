@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Pull-Up Counter</string>
+<string name="language_ru">Русский</string><string name="language_en">English</string><string name="language_lv">Latviešu</string>
+<string name="language_de">Deutsch</string><string name="language_fr">Français</string><string name="language_ja">日本語</string>
+<string name="language_ar">العربية</string><string name="language_hi">हिन्दी</string><string name="language_es">Español</string>
+<string name="language_it">Italiano</string><string name="language_pt">Português</string><string name="language_zh">简体中文</string>
+<string name="language_ko">한국어</string><string name="language_nl">Nederlands</string><string name="language_pl">Polski</string>
+<string name="language_cs">Čeština</string><string name="language_ro">Română</string><string name="language_el">Ελληνικά</string>
+<string name="language_sv">Svenska</string><string name="language_nb">Norsk bokmål</string><string name="language_da">Dansk</string>
+<string name="language_fi">Suomi</string><string name="language_uk">Українська</string>
+<string name="settings">Setări</string>
+<string name="history">Istoric</string>
+<string name="general">General</string>
+<string name="language">Limbă</string>
+<string name="theme">Temă</string>
+<string name="theme_dark">Întunecată</string>
+<string name="theme_light">Luminoasă</string>
+<string name="theme_system">Sistem</string>
+<string name="language_system">Sistem</string>
+<string name="pullup_parameters">Parametri tracțiuni</string>
+<string name="down_angle">Unghiul brațelor jos</string>
+<string name="up_angle">Unghiul brațelor sus</string>
+<string name="top_hold">Menținere sus</string>
+<string name="reset_default">Resetare implicită</string>
+<string name="backup">Copie de siguranță</string>
+<string name="save_backup">Salvează copia</string>
+<string name="restore_backup">Restaurează</string>
+<string name="backup_hint">Setările și istoricul antrenamentelor sunt salvate împreună</string>
+<string name="about">Despre</string>
+<string name="keep_screen_on">Păstrează ecranul aprins în timpul antrenamentului</string>
+<string name="screen_on_always">Activ cât timp ecranul de antrenament este deschis</string>
+<string name="back">Înapoi</string>
+<string name="auto">Auto</string>
+<string name="bar_line">Linie</string>
+<string name="new_attempt">Nouă</string>
+<string name="count_tts_on">Vocea numărătorii pornită</string>
+<string name="count_tts_off">Vocea numărătorii oprită</string>
+<string name="coach_tts_on">Indicații vocale pornite</string>
+<string name="coach_tts_off">Indicații vocale oprite</string>
+<string name="attempt_today">SERIE / AZI ↻</string>
+<string name="today">AZI ↻</string>
+<string name="all_time">TOTAL ↻</string>
+<string name="edit_attempt">Editează seria curentă</string>
+<string name="open_history">Deschide istoricul</string>
+<string name="camera">Cameră</string>
+<string name="show_body_and_hang">ARATĂ CORPUL ȘI PICIOARELE ÎN CADRU\nPRINDE BARA ȘI ATÂRNĂ</string>
+<string name="touch_bar">ATINGE BARA</string>
+<string name="bar_set">BARA SETATĂ ✓</string>
+<string name="bar_found">BARA GĂSITĂ ✓</string>
+<string name="ready">GATA</string>
+<string name="stand_in_frame">INTRĂ COMPLET ÎN CADRU</string>
+<string name="stay_still_search">NU TE MIȘCA • CĂUTARE %1$d/%2$d</string>
+<string name="can_start">POȚI ÎNCEPE</string>
+<string name="going_up">SUS ↑</string>
+<string name="counted">NUMĂRAT ✓</string>
+<string name="at_top">SUS</string>
+<string name="go_lower">COBOARĂ MAI JOS ↓</string>
+<string name="straighten_arms">ÎNDREAPTĂ BRAȚELE</string>
+<string name="edit_score">EDITEAZĂ SERIA</string>
+<string name="score_fixed">NUMĂR CORECTAT ✓</string>
+<string name="changes_cancelled">MODIFICĂRI ANULATE</string>
+<string name="tts_bar_set">Bara a fost setată</string>
+<string name="tts_hang">Prinde bara și rămâi atârnat</string>
+<string name="tts_touch_bar">Atinge bara în imagine</string>
+<string name="tts_bar_found">Bara a fost găsită</string>
+<string name="tts_can_start">Poți începe</string>
+<string name="tts_go_lower_straight">Coboară mai jos și îndreaptă brațele</string>
+<string name="tts_go_lower">Coboară mai jos</string>
+<string name="tts_go_higher">Urcă mai sus</string>
+<string name="settings_applied_restart">Limba se aplică după redeschiderea ecranului</string>
+<string name="backup_saved">Copia a fost salvată</string>
+<string name="backup_error_save">Copia nu a putut fi salvată: %1$s</string>
+<string name="backup_error_read">Copia nu a putut fi citită: %1$s</string>
+<string name="restore_title">Restaurează date</string>
+<string name="restore_message">Combini copia cu istoricul actual sau îl înlocuiești?</string>
+<string name="merge">Combină</string>
+<string name="replace">Înlocuiește</string>
+<string name="cancel">Anulează</string>
+<string name="ok">OK</string>
+<string name="history_title">ISTORIC</string>
+<string name="history_subtitle">Toate seriile salvate pe zile</string>
+<string name="history_empty">Istoricul este gol\nFă prima tracțiune</string>
+<string name="day_total">%1$d azi</string>
+<string name="reps_count">%1$d rep.</string>
+<string name="splash_subtitle">Fiecare repetare contează</string>
+<string name="draw_bar_line">TRASEAZĂ LINIA PE BARĂ</string>
+<string name="calibration">CALIBRARE</string>
+<string name="error">EROARE</string>
+<string name="unknown_error">Eroare necunoscută</string>
+<string name="camera_permission_required">Este necesară permisiunea camerei</string>
+<string name="mediapipe_error">MediaPipe nu a pornit: %1$s</string>
+<string name="tts_unavailable">TTS nu este disponibil pe acest dispozitiv</string>
+<string name="backup_file_hint">Fișierul poate fi salvat local sau în cloud prin selectorul de fișiere</string>
+<string name="help_title">Ajutor</string>
+<string name="help_open">Deschide instrucțiunile</string>
+<string name="help_content" formatted="false">## Pornire rapidă
+
+Fixează telefonul astfel încât camera să vadă trunchiul, brațele și o parte din picioare. Folosește Auto sau Linie, atârnă cu brațele întinse, urcă și revino jos.
+
+## Calibrare și pauză
+
+Auto caută bara când stai nemișcat. Linie permite setarea manuală. Pauza oprește detectarea, numărătoarea și TTS; după reluare bara este recalibrată.
+
+## Numărare
+
+O repetare cere poziție validă jos, mișcare în sus, poziție validă sus și coborâre. Priza largă primește automat toleranță de unghi; din spate se poate folosi ridicarea umerilor când fața nu este vizibilă.
+
+## Ecran și voce
+
+Poți schimba modul Serie/Azi, Azi, Total, porni o serie nouă și corecta seria curentă. Seria activă și starea celor două butoane vocale se păstrează după restart.
+
+## Setări și backup
+
+Limba, tema și parametrii detectorului pot fi modificați. Backup-ul JSON păstrează istoricul și setările și poate fi combinat sau folosit pentru înlocuire.</string>
+</resources>
