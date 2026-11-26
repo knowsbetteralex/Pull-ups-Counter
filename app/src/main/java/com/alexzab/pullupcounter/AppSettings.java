@@ -32,7 +32,11 @@ public final class AppSettings {
     private static final String KEY_ACTIVE_ATTEMPT_DAY = "active_attempt_day";
     private static final String KEY_PARAMETER_PROFILE_VERSION = "parameter_profile_version";
 
-    public static final int PARAMETER_PROFILE_VERSION = 1;
+    public static final int PARAMETER_PROFILE_VERSION = 2;
+
+    private static final int LEGACY_DOWN_ANGLE = 150;
+    private static final int LEGACY_UP_ANGLE = 85;
+    private static final int LEGACY_TOP_HOLD_MS = 250;
 
     private final SharedPreferences prefs;
 
@@ -110,20 +114,29 @@ public final class AppSettings {
         if (o == null) return;
         if (o.has("language")) setLanguage(o.optString("language", "system"));
         if (o.has("theme")) setTheme(o.optString("theme", "dark"));
-        if (o.has("downAngle")) setDownAngle(o.optInt("downAngle", DEFAULT_DOWN_ANGLE));
-        if (o.has("upAngle")) setUpAngle(o.optInt("upAngle", DEFAULT_UP_ANGLE));
-        if (o.has("topHoldMs")) setTopHoldMs(o.optInt("topHoldMs", DEFAULT_TOP_HOLD_MS));
+        int importedProfile = Math.max(1, o.optInt("parameterProfileVersion", 1));
+        if (o.has("downAngle")) {
+            int value = o.optInt("downAngle", LEGACY_DOWN_ANGLE);
+            setDownAngle(importedProfile < PARAMETER_PROFILE_VERSION
+                    ? DEFAULT_DOWN_ANGLE + (value - LEGACY_DOWN_ANGLE) : value);
+        }
+        if (o.has("upAngle")) {
+            int value = o.optInt("upAngle", LEGACY_UP_ANGLE);
+            setUpAngle(importedProfile < PARAMETER_PROFILE_VERSION
+                    ? DEFAULT_UP_ANGLE + (value - LEGACY_UP_ANGLE) : value);
+        }
+        if (o.has("topHoldMs")) {
+            int value = o.optInt("topHoldMs", LEGACY_TOP_HOLD_MS);
+            setTopHoldMs(importedProfile < PARAMETER_PROFILE_VERSION
+                    ? DEFAULT_TOP_HOLD_MS + (value - LEGACY_TOP_HOLD_MS) : value);
+        }
         if (o.has("scoreMode")) setScoreMode(Math.max(0, Math.min(2, o.optInt("scoreMode", 0))));
         if (o.has("countSpeech")) setCountSpeechEnabled(o.optBoolean("countSpeech", false));
         if (o.has("adviceSpeech")) setAdviceSpeechEnabled(o.optBoolean("adviceSpeech", false));
 
-        // Parameter profile version is intentionally recorded separately from backup version.
-        // When the new tuned defaults are supplied, migration can preserve user deviation
-        // from the old 150° / 85° / 250 ms baseline instead of blindly copying raw values.
-        if (o.has("parameterProfileVersion")) {
-            prefs.edit().putInt(KEY_PARAMETER_PROFILE_VERSION,
-                    Math.max(1, o.optInt("parameterProfileVersion", 1))).apply();
-        }
+        // Parameter profile is independent from backup format. Old backups preserve
+        // the user's offset from the old baseline instead of copying absolute values.
+        prefs.edit().putInt(KEY_PARAMETER_PROFILE_VERSION, PARAMETER_PROFILE_VERSION).apply();
     }
 
     private static int clamp(int v, int min, int max) { return Math.max(min, Math.min(max, v)); }
