@@ -227,7 +227,7 @@ public final class PullupDetector {
                 } else {
                     upStable = 0;
                     topCandidateSinceMs = 0L;
-                    if (armsExtended) state = State.DOWN;
+                    if (armsExtended) { state = State.DOWN; downShoulderY = shoulderY; }
                 }
                 break;
             case UP:
@@ -239,6 +239,7 @@ public final class PullupDetector {
                 if (armsExtended) {
                     if (++downStable >= STABLE_FRAMES) {
                         state = State.DOWN;
+                        downShoulderY = shoulderY;
                         downStable = 0;
                     }
                 } else {
